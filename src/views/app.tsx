@@ -1,7 +1,11 @@
 import React from 'react';
+import { Header, Main } from './layouts';
 
 export const App: React.FC = () => {
   return (
-    <div>hello react</div>
+    <React.Fragment>
+      <Header/>
+      <Main/>
+    </React.Fragment>
   );
 };
