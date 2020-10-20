@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Card, CardActions, CardContent, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Modal } from '@material-ui/core';
+import { Avatar, Card, CardActions, CardContent, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Delete } from '@material-ui/icons';
 import { useDropzone } from 'react-dropzone';
+import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
 
@@ -133,7 +134,7 @@ export const LgtmsPage: React.FC = () => {
             </List>
           </CardContent>
           <CardActions>
-            <Button fullWidth disabled={uploading} color='primary' variant='contained' onClick={uploadLgtms}>Upload</Button>
+            <LoadableButton fullWidth loading={uploading} disabled={uploading} color='primary' variant='contained' onClick={uploadLgtms}>Upload</LoadableButton>
           </CardActions>
         </Card>
       </Modal>
