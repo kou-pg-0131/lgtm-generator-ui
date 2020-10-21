@@ -9,7 +9,7 @@ import { ImagePreviewListItem } from './imagePreviewListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    card: {
       left: '50%',
       outline: 0,
       position: 'absolute',
@@ -84,7 +84,7 @@ export const LgtmsPage: React.FC = () => {
   return (
     <div>
       <Modal open={open} onClose={closeModal}>
-        <Card className={classes.root}>
+        <Card className={classes.card}>
           <CardContent>
             <ImageFileDropzone onDrop={addImageFiles}/>
             <List className={classes.list}>
