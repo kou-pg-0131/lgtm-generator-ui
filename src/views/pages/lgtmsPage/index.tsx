@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Card, CardActions, CardContent, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Delete } from '@material-ui/icons';
-import { useDropzone } from 'react-dropzone';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
+import { ImageFileDropzone } from './imageFileDropzone';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,7 +78,6 @@ export const LgtmsPage: React.FC = () => {
     const newImageFiles = await Promise.all(acceptedFiles.map(async acceptedFile => await imageFileLoader.load(acceptedFile)));
     setImageFiles(newImageFiles);
   };
-  const { getInputProps, getRootProps } = useDropzone({ onDrop: addImageFiles });
 
   const openDropzone = () => setOpen(true);
   const closeDropzone = () => !uploading && setOpen(false);
@@ -112,10 +111,9 @@ export const LgtmsPage: React.FC = () => {
       <Modal open={open} onClose={closeDropzone}>
         <Card className={classes.root}>
           <CardContent>
-            <div {...getRootProps({ className: classes.dropzone })}>
-              <input {...getInputProps()}/>
+            <ImageFileDropzone onDrop={addImageFiles}>
               <p>Drag &#39;n&#39; drop some files here, or click to select files</p>
-            </div>
+            </ImageFileDropzone>
             <List className={classes.list}>
               {imageFiles.map((imageFile, i) => (
                 <React.Fragment key={i}>
