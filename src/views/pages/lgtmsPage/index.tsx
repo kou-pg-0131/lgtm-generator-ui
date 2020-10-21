@@ -32,20 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
         height: 150,
       },
     },
-    fileName: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    preview: {
-      border: '1px solid #eeeeee',
-      height: 70,
-      marginRight: 24,
-      width: 70,
-      [theme.breakpoints.down('xs')]: {
-        height: 40,
-        width: 40,
-      },
-    },
   }),
 );
 
@@ -98,9 +84,7 @@ export const LgtmsPage: React.FC = () => {
       <Modal open={open} onClose={closeDropzone}>
         <Card className={classes.root}>
           <CardContent>
-            <ImageFileDropzone onDrop={addImageFiles}>
-              <p>Drag &#39;n&#39; drop some files here, or click to select files</p>
-            </ImageFileDropzone>
+            <ImageFileDropzone onDrop={addImageFiles}/>
             <List className={classes.list}>
               {imageFiles.map((imageFile, i) => (
                 <React.Fragment key={i}>
