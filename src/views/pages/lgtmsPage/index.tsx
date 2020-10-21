@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Card, CardActions, CardContent, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Modal } from '@material-ui/core';
+import { Card, CardActions, CardContent, CircularProgress, Divider, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Delete } from '@material-ui/icons';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { ImageFileDropzone } from './imageFileDropzone';
+import { ImagePreviewListItem } from './imagePreviewListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,19 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         width: '90%',
       },
-    },
-    dropzone: {
-      alignItems: 'center',
-      backgroundColor: '#fafafa',
-      border: '2px dashed #eee',
-      borderRadius: 2,
-      color: '#bdbdbd',
-      cursor: 'pointer',
-      display: 'flex',
-      flex: 1,
-      flexDirection: 'column',
-      outline: 'none',
-      padding: 40,
     },
     list: {
       border: '1px solid #eee',
@@ -117,15 +104,10 @@ export const LgtmsPage: React.FC = () => {
             <List className={classes.list}>
               {imageFiles.map((imageFile, i) => (
                 <React.Fragment key={i}>
-                  <ListItem key={i}>
-                    <ListItemAvatar>
-                      <Avatar variant='square' src={imageFile.dataUrl} className={classes.preview}/>
-                    </ListItemAvatar>
-                    <ListItemText primary={imageFile.name} primaryTypographyProps={{ style: { display: 'inline' } }} className={classes.fileName}/>
-                    <ListItemSecondaryAction>
-                      <IconButton onClick={() => deleteImage(i)}><Delete/></IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                  <ImagePreviewListItem
+                    imageFile={imageFile}
+                    onDelete={() => deleteImage(i)}
+                  />
                   <Divider/>
                 </React.Fragment>
               ))}
