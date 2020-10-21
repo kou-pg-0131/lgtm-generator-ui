@@ -52,8 +52,8 @@ export const LgtmsPage: React.FC = () => {
     setImageFiles(imageFiles.concat(newImageFiles));
   };
 
-  const openDropzone = () => setOpen(true);
-  const closeDropzone = () => !uploading && setOpen(false);
+  const openModal = () => setOpen(true);
+  const closeModal = () => !uploading && setOpen(false);
   const deleteImage = (index: number) => setImageFiles(imageFiles.filter((_, i) => i !== index));
 
   const getLgtms = async () => {
@@ -73,6 +73,8 @@ export const LgtmsPage: React.FC = () => {
     getLgtms();
 
     setUploading(false);
+    closeModal();
+    setImageFiles([]);
   };
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export const LgtmsPage: React.FC = () => {
 
   return (
     <div>
-      <Modal open={open} onClose={closeDropzone}>
+      <Modal open={open} onClose={closeModal}>
         <Card className={classes.root}>
           <CardContent>
             <ImageFileDropzone onDrop={addImageFiles}/>
@@ -99,7 +101,7 @@ export const LgtmsPage: React.FC = () => {
           </CardActions>
         </Card>
       </Modal>
-      <button onClick={openDropzone}>upload</button>
+      <button onClick={openModal}>upload</button>
       {fetching ? (
         <CircularProgress/>
       ) : (
