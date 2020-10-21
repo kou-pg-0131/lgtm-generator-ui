@@ -21,7 +21,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "lint": "eslint './**/*.ts'",
+    "lint": "eslint './**/*.ts' './**/*.tsx'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
