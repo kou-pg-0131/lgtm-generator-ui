@@ -49,7 +49,7 @@ export const LgtmsPage: React.FC = () => {
   const addImageFiles = async (acceptedFiles: File[]) => {
     const imageFileLoader = new ImageFileLoader();
     const newImageFiles = await Promise.all(acceptedFiles.map(async acceptedFile => await imageFileLoader.load(acceptedFile)));
-    setImageFiles(newImageFiles);
+    setImageFiles(imageFiles.concat(newImageFiles));
   };
 
   const openDropzone = () => setOpen(true);
@@ -88,10 +88,7 @@ export const LgtmsPage: React.FC = () => {
             <List className={classes.list}>
               {imageFiles.map((imageFile, i) => (
                 <React.Fragment key={i}>
-                  <ImagePreviewListItem
-                    imageFile={imageFile}
-                    onDelete={() => deleteImage(i)}
-                  />
+                  <ImagePreviewListItem imageFile={imageFile} onDelete={() => deleteImage(i)}/>
                   <Divider/>
                 </React.Fragment>
               ))}
