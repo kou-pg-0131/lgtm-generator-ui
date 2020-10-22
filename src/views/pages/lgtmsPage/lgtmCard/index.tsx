@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper, Popper, Tooltip } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper, Popper } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { Lgtm } from '../../../../domain';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     card: {
       border: '1px solid #eeeeee',
@@ -75,21 +75,15 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
         <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
           <ButtonGroup color='primary' className={classes.buttonGroup}>
-            <Tooltip arrow title='Copy' placement='top'>
-              <Button onClick={handleClickCopy}>
-                <FileCopyOutlined fontSize='small'/>
-              </Button>
-            </Tooltip>
-            <Tooltip arrow title='Favorite' placement='top'>
-              <Button>
-                <FavoriteBorder fontSize='small'/>
-              </Button>
-            </Tooltip>
-            <Tooltip arrow title='Report' placement='top'>
-              <Button>
-                <FlagOutlined fontSize='small'/>
-              </Button>
-            </Tooltip>
+            <Button onClick={handleClickCopy}>
+              <FileCopyOutlined fontSize='small'/>
+            </Button>
+            <Button>
+              <FavoriteBorder fontSize='small'/>
+            </Button>
+            <Button>
+              <FlagOutlined fontSize='small'/>
+            </Button>
           </ButtonGroup>
         </CardActions>
       </Card>
