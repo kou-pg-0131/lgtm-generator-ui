@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonGroup, Card, CardActions, CardMedia, Fab, Tooltip } from '@material-ui/core';
+import { Button, ButtonGroup, Card, CardActions, CardMedia, Tooltip } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { Lgtm } from '../../../../domain';
@@ -13,6 +13,7 @@ const useStyles = makeStyles(() =>
       justifyContent: 'center',
     },
     media: {
+      backgroundSize: 'contain',
       height: 140,
     },
     buttonGroup: {
