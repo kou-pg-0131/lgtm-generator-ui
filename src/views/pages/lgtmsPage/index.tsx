@@ -106,7 +106,7 @@ export const LgtmsPage: React.FC = () => {
         <CircularProgress/>
       ) : (
         lgtms.map(lgtm => (
-          <img key={lgtm.id} src={lgtm.url} alt="LGTM" height={80} width={80} />
+          <img key={lgtm.id} src={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${lgtm.id}`} alt="LGTM" height={80} width={80} />
         ))
       )}
     </div>
