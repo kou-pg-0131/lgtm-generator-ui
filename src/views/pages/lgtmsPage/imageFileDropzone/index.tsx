@@ -22,6 +22,7 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   onDrop: (acceptedFiles: File[]) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  disabled: boolean;
 };
 
 export const ImageFileDropzone: React.FC<Props> = (props: Props) => {
@@ -31,7 +32,7 @@ export const ImageFileDropzone: React.FC<Props> = (props: Props) => {
 
   return (
     <div {...getRootProps({ className: classes.dropzone })}>
-      <input {...getInputProps()}/>
+      <input {...getInputProps({ disabled: props.disabled })}/>
       <p>Drag &#39;n&#39; drop some files here, or click to select files</p>
     </div>
   );

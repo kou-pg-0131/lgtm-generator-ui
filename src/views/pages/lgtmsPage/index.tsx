@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Grid, List, Modal } from '@material-ui/core';
+import { Box, Button, CircularProgress, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
-import { FabButton, LoadableButton } from '../../components';
+import { FabButton } from '../../components';
 import { Lgtm } from '../../../domain';
-import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
-import { ImageFileDropzone } from './imageFileDropzone';
-import { ImagePreviewListItem } from './imagePreviewListItem';
+import { ApiClient, ImageFile } from '../../../infrastructures';
 import { LgtmCard } from './lgtmCard';
+import { UploadForm } from './uploadForm';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,20 +46,12 @@ export const LgtmsPage: React.FC = () => {
   const [evaluatedId, setEvaluatedId] = useState<string>();
   const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
-  const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
   const apiClient = new ApiClient();
 
-  const addImageFiles = async (acceptedFiles: File[]) => {
-    const imageFileLoader = new ImageFileLoader();
-    const newImageFiles = await Promise.all(acceptedFiles.map(async acceptedFile => await imageFileLoader.load(acceptedFile)));
-    setImageFiles(imageFiles.concat(newImageFiles));
-  };
-
   const openModal = () => setOpen(true);
   const closeModal = () => !uploading && setOpen(false);
-  const deleteImage = (index: number) => setImageFiles(imageFiles.filter((_, i) => i !== index));
 
   // TODO: refactor
   const loadLgtms = async () => {
@@ -78,7 +69,7 @@ export const LgtmsPage: React.FC = () => {
     setFetching(false);
   };
 
-  const uploadLgtms = async () => {
+  const uploadLgtms = async (imageFiles: ImageFile[]) => {
     setUploading(true);
 
     await Promise.all(imageFiles.map(async imageFile => {
@@ -88,7 +79,6 @@ export const LgtmsPage: React.FC = () => {
     loadLgtms();
     setUploading(false);
     closeModal();
-    setImageFiles([]);
   };
 
   useEffect(() => {
@@ -101,24 +91,12 @@ export const LgtmsPage: React.FC = () => {
         <AddCircle className={classes.addIcon}/>
         Upload
       </FabButton>
-      <Modal open={open} onClose={closeModal}>
-        <Card className={classes.card}>
-          <CardContent>
-            <ImageFileDropzone onDrop={addImageFiles}/>
-            <List className={classes.list}>
-              {imageFiles.map((imageFile, i) => (
-                <React.Fragment key={i}>
-                  <ImagePreviewListItem imageFile={imageFile} onDelete={() => deleteImage(i)}/>
-                  <Divider/>
-                </React.Fragment>
-              ))}
-            </List>
-          </CardContent>
-          <CardActions>
-            <LoadableButton fullWidth loading={uploading} disabled={uploading} color='primary' variant='contained' onClick={uploadLgtms}>Upload</LoadableButton>
-          </CardActions>
-        </Card>
-      </Modal>
+      <UploadForm
+        open={open}
+        onClose={closeModal}
+        uploading={uploading}
+        onUpload={uploadLgtms}
+      />
       <Grid container spacing={1}>
         {lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
