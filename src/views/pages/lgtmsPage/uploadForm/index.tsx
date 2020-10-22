@@ -3,7 +3,7 @@ import { Card, CardActions, CardContent, Divider, List, Modal } from '@material-
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { LoadableButton } from '../../../components';
 import { ImageFile, ImageFileLoader } from '../../../../infrastructures';
-import { ImageFileDropzone } from './../imageFileDropzone';
+import { ImageFileDropzone } from './imageFileDropzone';
 import { ImagePreviewListItem } from './../imagePreviewListItem';
 
 const useStyles = makeStyles((theme: Theme) =>
