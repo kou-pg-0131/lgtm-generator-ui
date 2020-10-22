@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, CircularProgress, Divider, Grid, IconButton, List, Modal } from '@material-ui/core';
+import { Card, CardActions, CardContent, CircularProgress, Divider, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { ImageFileDropzone } from './imageFileDropzone';
 import { ImagePreviewListItem } from './imagePreviewListItem';
+import { LgtmCard } from './lgtmCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         height: 150,
       },
-    },
-    media: {
-      height: 140,
     },
   }),
 );
@@ -112,16 +109,7 @@ export const LgtmsPage: React.FC = () => {
         <Grid container spacing={1}>
           {lgtms.map(lgtm => (
             <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
-              <Card>
-                <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${lgtm.id}`} title='LGTM' className={classes.media}/>
-                <CardActions disableSpacing>
-                  <ButtonGroup color='primary'>
-                    <Button><FileCopyOutlined/></Button>
-                    <Button><FavoriteBorder/></Button>
-                    <Button><FlagOutlined/></Button>
-                  </ButtonGroup>
-                </CardActions>
-              </Card>
+              <LgtmCard lgtm={lgtm}/>
             </Grid>
           ))}
         </Grid>
