@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardActions, CardContent, CircularProgress, Divider, List, Modal } from '@material-ui/core';
+import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, CircularProgress, Divider, Grid, IconButton, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         height: 150,
       },
+    },
+    media: {
+      height: 140,
     },
   }),
 );
@@ -82,7 +86,7 @@ export const LgtmsPage: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <React.Fragment>
       <Modal open={open} onClose={closeModal}>
         <Card className={classes.card}>
           <CardContent>
@@ -105,10 +109,23 @@ export const LgtmsPage: React.FC = () => {
       {fetching ? (
         <CircularProgress/>
       ) : (
-        lgtms.map(lgtm => (
-          <img key={lgtm.id} src={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${lgtm.id}`} alt="LGTM" height={80} width={80} />
-        ))
+        <Grid container spacing={1}>
+          {lgtms.map(lgtm => (
+            <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
+              <Card>
+                <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${lgtm.id}`} title='LGTM' className={classes.media}/>
+                <CardActions disableSpacing>
+                  <ButtonGroup color='primary'>
+                    <Button><FileCopyOutlined/></Button>
+                    <Button><FavoriteBorder/></Button>
+                    <Button><FlagOutlined/></Button>
+                  </ButtonGroup>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
-    </div>
+    </React.Fragment>
   );
 };
