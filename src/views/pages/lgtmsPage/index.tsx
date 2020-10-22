@@ -43,6 +43,7 @@ export const LgtmsPage: React.FC = () => {
   const classes = useStyles();
 
   const [lgtms, setLgtms] = useState<Lgtm[]>([]);
+  const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const [evaluatedId, setEvaluatedId] = useState<string>();
   const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -51,7 +52,10 @@ export const LgtmsPage: React.FC = () => {
   const apiClient = new ApiClient();
 
   const openModal = () => setOpen(true);
-  const closeModal = () => !uploading && setOpen(false);
+  const closeModal = () => {
+    setOpen(false);
+    setImageFiles([]);
+  };
 
   // TODO: refactor
   const loadLgtms = async () => {
@@ -69,7 +73,11 @@ export const LgtmsPage: React.FC = () => {
     setFetching(false);
   };
 
-  const uploadLgtms = async (imageFiles: ImageFile[]) => {
+  const deleteImageFileAt = (index: number) => {
+    setImageFiles(imageFiles.filter((_, i) => i !== index));
+  };
+
+  const uploadLgtms = async () => {
     setUploading(true);
 
     await Promise.all(imageFiles.map(async imageFile => {
@@ -96,6 +104,9 @@ export const LgtmsPage: React.FC = () => {
         onClose={closeModal}
         uploading={uploading}
         onUpload={uploadLgtms}
+        imageFiles={imageFiles}
+        onDeleteImageFileAt={deleteImageFileAt}
+        onChange={setImageFiles}
       />
       <Grid container spacing={1}>
         {lgtms.map(lgtm => (
