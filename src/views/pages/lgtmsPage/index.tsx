@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardActions, CardContent, CircularProgress, Divider, Grid, List, Modal } from '@material-ui/core';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
@@ -40,6 +40,7 @@ export const LgtmsPage: React.FC = () => {
   const classes = useStyles();
 
   const [lgtms, setLgtms] = useState<Lgtm[]>([]);
+  const [evaluatedId, setEvaluatedId] = useState<string>();
   const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
@@ -57,10 +58,19 @@ export const LgtmsPage: React.FC = () => {
   const closeModal = () => !uploading && setOpen(false);
   const deleteImage = (index: number) => setImageFiles(imageFiles.filter((_, i) => i !== index));
 
-  const getLgtms = async () => {
+  // TODO: refactor
+  const loadLgtms = async () => {
     setFetching(true);
-    const fetchedLgtms = await apiClient.getLgtms();
-    setLgtms(fetchedLgtms.lgtms);
+    const response = await apiClient.getLgtms();
+    setLgtms(response.lgtms);
+    setEvaluatedId(response.evaluated_id);
+    setFetching(false);
+  };
+  const moreLgtms = async () => {
+    setFetching(true);
+    const response = await apiClient.getLgtms(evaluatedId);
+    setLgtms([...lgtms, ...response.lgtms]);
+    setEvaluatedId(response.evaluated_id);
     setFetching(false);
   };
 
@@ -71,15 +81,14 @@ export const LgtmsPage: React.FC = () => {
       const base64 = imageFile.dataUrl.slice(imageFile.dataUrl.indexOf(',') + 1);
       await apiClient.createLgtm({ base64 });
     }));
-    getLgtms();
-
+    loadLgtms();
     setUploading(false);
     closeModal();
     setImageFiles([]);
   };
 
   useEffect(() => {
-    getLgtms();
+    loadLgtms();
   }, []);
 
   return (
@@ -103,16 +112,24 @@ export const LgtmsPage: React.FC = () => {
         </Card>
       </Modal>
       <button onClick={openModal}>upload</button>
-      {fetching ? (
-        <CircularProgress/>
-      ) : (
         <Grid container spacing={1}>
-          {lgtms.map(lgtm => (
-            <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
-              <LgtmCard lgtm={lgtm}/>
-            </Grid>
-          ))}
-        </Grid>
+        {lgtms.map(lgtm => (
+          <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
+            <LgtmCard lgtm={lgtm}/>
+          </Grid>
+        ))}
+      </Grid>
+
+      {fetching && (
+        <Box style={{textAlign: 'center'}}>
+          <CircularProgress/>
+        </Box>
+      )}
+
+      {!fetching && evaluatedId && (
+        <Box style={{textAlign: 'center'}}>
+          <Button color='primary' variant='contained' disabled={fetching} onClick={moreLgtms}>More</Button>
+        </Box>
       )}
     </React.Fragment>
   );

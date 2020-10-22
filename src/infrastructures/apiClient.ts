@@ -9,8 +9,9 @@ export class ApiClient {
     },
   };
 
-  public async getLgtms(): Promise<{ lgtms: Lgtm[]; evaluated_id: string; }> {
-    const response = await axios.get(this.endpoints.v1.lgtms, { headers: { 'Content-Type': 'application/json' } });
+  public async getLgtms(evaluatedId?: string): Promise<{ lgtms: Lgtm[]; evaluated_id: string; }> {
+    // TODO: refactor
+    const response = await axios.get(`${this.endpoints.v1.lgtms}?evaluated_id=${evaluatedId}`, { headers: { 'Content-Type': 'application/json' } });
     return response.data;
   }
 
