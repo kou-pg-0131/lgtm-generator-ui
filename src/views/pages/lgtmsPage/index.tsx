@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Grid, List, Modal } from '@material-ui/core';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Fab, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { AddCircle } from '@material-ui/icons';
 import { LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
@@ -32,6 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         height: 150,
       },
+    },
+    addIcon: {
+      marginRight: 8,
+    },
+    fab: {
+      bottom: 24,
+      position: 'fixed',
+      right: 24,
     },
   }),
 );
@@ -93,6 +102,10 @@ export const LgtmsPage: React.FC = () => {
 
   return (
     <React.Fragment>
+      <Fab color='primary' className={classes.fab} onClick={openModal} variant='extended'>
+        <AddCircle className={classes.addIcon}/>
+        Upload
+      </Fab>
       <Modal open={open} onClose={closeModal}>
         <Card className={classes.card}>
           <CardContent>
@@ -111,8 +124,7 @@ export const LgtmsPage: React.FC = () => {
           </CardActions>
         </Card>
       </Modal>
-      <button onClick={openModal}>upload</button>
-        <Grid container spacing={1}>
+      <Grid container spacing={1}>
         {lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
             <LgtmCard lgtm={lgtm}/>
