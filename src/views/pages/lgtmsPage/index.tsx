@@ -6,6 +6,7 @@ import { FabButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile } from '../../../infrastructures';
 import { LgtmCard } from './lgtmCard';
+import { MoreButton } from './moreButton';
 import { UploadForm } from './uploadForm';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -116,17 +117,11 @@ export const LgtmsPage: React.FC = () => {
         ))}
       </Grid>
 
-      {fetching && (
-        <Box style={{textAlign: 'center'}}>
-          <CircularProgress/>
-        </Box>
-      )}
-
-      {!fetching && evaluatedId && (
-        <Box style={{textAlign: 'center'}}>
-          <Button color='primary' variant='contained' disabled={fetching} onClick={moreLgtms}>More</Button>
-        </Box>
-      )}
+      <MoreButton
+        processing={fetching}
+        visible={Boolean(evaluatedId || fetching)}
+        onClick={moreLgtms}
+      />
     </React.Fragment>
   );
 };
