@@ -73,8 +73,7 @@ export const LgtmsPage: React.FC = () => {
     setUploading(true);
 
     await Promise.all(imageFiles.map(async imageFile => {
-      const base64 = imageFile.dataUrl.slice(imageFile.dataUrl.indexOf(',') + 1);
-      await apiClient.createLgtm({ base64 });
+      await apiClient.createLgtm({ base64: imageFile.base64 });
     })).then(() => {
       reloadLgtms();
       setOpen(false);

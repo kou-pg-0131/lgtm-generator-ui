@@ -34,7 +34,7 @@ export const ImagePreviewListItem: React.FC<Props> = (props: Props) => {
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar variant='square' src={props.imageFile.dataUrl} className={classes.preview}/>
+        <Avatar variant='square' src={`data:${props.imageFile.type};base64,${props.imageFile.base64}`} className={classes.preview}/>
       </ListItemAvatar>
       <ListItemText primary={props.imageFile.name} primaryTypographyProps={{ style: { display: 'inline' } }} className={classes.fileName}/>
       <ListItemSecondaryAction>
