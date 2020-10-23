@@ -52,31 +52,22 @@ export const LgtmsPage: React.FC = () => {
 
   const apiClient = new ApiClient();
 
-  const openModal = () => setOpen(true);
-  const closeModal = () => {
-    setOpen(false);
-    setImageFiles([]);
+  const loadLgtms = () => {
+    setFetching(true);
+    apiClient.getLgtms(evaluatedId).then(response => {
+      setLgtms((prev) => [...prev, ...response.lgtms]);
+      setEvaluatedId(response.evaluated_id);
+    }).finally(() => {
+      setFetching(false);
+    });
+  };
+  const reloadLgtms = () => {
+    setLgtms([]);
+    setEvaluatedId(undefined);
+    loadLgtms();
   };
 
-  // TODO: refactor
-  const loadLgtms = async () => {
-    setFetching(true);
-    const response = await apiClient.getLgtms();
-    setLgtms(response.lgtms);
-    setEvaluatedId(response.evaluated_id);
-    setFetching(false);
-  };
-  const moreLgtms = async () => {
-    setFetching(true);
-    const response = await apiClient.getLgtms(evaluatedId);
-    setLgtms([...lgtms, ...response.lgtms]);
-    setEvaluatedId(response.evaluated_id);
-    setFetching(false);
-  };
-
-  const deleteImageFileAt = (index: number) => {
-    setImageFiles(imageFiles.filter((_, i) => i !== index));
-  };
+  const deleteImageFileAt = (index: number) => setImageFiles(imageFiles.filter((_, i) => i !== index));
 
   const uploadLgtms = async () => {
     setUploading(true);
@@ -84,10 +75,12 @@ export const LgtmsPage: React.FC = () => {
     await Promise.all(imageFiles.map(async imageFile => {
       const base64 = imageFile.dataUrl.slice(imageFile.dataUrl.indexOf(',') + 1);
       await apiClient.createLgtm({ base64 });
-    }));
-    loadLgtms();
-    setUploading(false);
-    closeModal();
+    })).then(() => {
+      reloadLgtms();
+      setOpen(false);
+    }).finally(() => {
+      setUploading(false);
+    });
   };
 
   useEffect(() => {
@@ -96,13 +89,13 @@ export const LgtmsPage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <FabButton color='primary' onClick={openModal} variant='extended'>
+      <FabButton color='primary' onClick={() => setOpen(true)} variant='extended'>
         <AddCircle className={classes.addIcon}/>
         Upload
       </FabButton>
       <UploadForm
         open={open}
-        onClose={closeModal}
+        onClose={() => setOpen(false)}
         uploading={uploading}
         onUpload={uploadLgtms}
         imageFiles={imageFiles}
@@ -120,7 +113,7 @@ export const LgtmsPage: React.FC = () => {
       <MoreButton
         processing={fetching}
         visible={Boolean(evaluatedId || fetching)}
-        onClick={moreLgtms}
+        onClick={loadLgtms}
       />
     </React.Fragment>
   );
