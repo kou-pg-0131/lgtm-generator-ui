@@ -1,26 +1,27 @@
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      bottom: 0,
-      left: 0,
-      padding: 40,
-      position: 'absolute',
-      textAlign: 'center',
-      width: '100%',
+      minHeight: '100vh',
+      paddingBottom: 120,
+      position: 'relative',
     },
   }),
 );
 
-export const Footer: React.FC = () => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const Wrapper: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   return (
     <Box className={classes.root}>
-      <Typography>&copy; 2020 koki sato</Typography>
+      {props.children}
     </Box>
   );
 };
