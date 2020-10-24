@@ -52,7 +52,7 @@ export const LgtmsPage: React.FC = () => {
 
   const apiClient = new ApiClient();
 
-  const loadLgtms = () => {
+  const loadLgtms = (evaluatedId?: string) => {
     setFetching(true);
     apiClient.getLgtms(evaluatedId).then(response => {
       setLgtms((prev) => [...prev, ...response.lgtms]);
@@ -112,7 +112,7 @@ export const LgtmsPage: React.FC = () => {
       <MoreButton
         processing={fetching}
         visible={Boolean(evaluatedId || fetching)}
-        onClick={loadLgtms}
+        onClick={() => loadLgtms(evaluatedId)}
       />
     </React.Fragment>
   );
