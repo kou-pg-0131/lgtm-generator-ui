@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Card, CardActions, CardContent, Divider, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
-import { FabButton } from '../../components';
+import { FabButton, LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
-import { ApiClient, ImageFile } from '../../../infrastructures';
+import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { LgtmCard } from './lgtmCard';
 import { MoreButton } from './moreButton';
-import { UploadForm } from './uploadForm';
+import { ImagePreviewListItem } from './imagePreviewListItem';
+import { ImageFileDropzone } from './imageFileDropzone';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,6 +62,7 @@ export const LgtmsPage: React.FC = () => {
       setFetching(false);
     });
   };
+
   const reloadLgtms = () => {
     setLgtms([]);
     setEvaluatedId(undefined);
@@ -71,7 +73,6 @@ export const LgtmsPage: React.FC = () => {
 
   const uploadLgtms = async () => {
     setUploading(true);
-
     await Promise.all(imageFiles.map(async imageFile => {
       await apiClient.createLgtm({ base64: imageFile.base64 });
     })).then(() => {
@@ -80,6 +81,15 @@ export const LgtmsPage: React.FC = () => {
     }).finally(() => {
       setUploading(false);
     });
+  };
+
+  const addImageFiles = async (acceptedFiles: File[]) => {
+    if (uploading) return;
+    const imageFileLoader = new ImageFileLoader();
+    await Promise.all(acceptedFiles.map(async acceptedFile => {
+      const imageFile = await imageFileLoader.load(acceptedFile);
+      setImageFiles((prev) => [...prev, imageFile]);
+    }));
   };
 
   useEffect(() => {
@@ -92,15 +102,33 @@ export const LgtmsPage: React.FC = () => {
         <AddCircle className={classes.addIcon}/>
         Upload
       </FabButton>
-      <UploadForm
-        open={open}
-        onClose={() => setOpen(false)}
-        uploading={uploading}
-        onUpload={uploadLgtms}
-        imageFiles={imageFiles}
-        onDeleteImageFileAt={deleteImageFileAt}
-        onChange={setImageFiles}
-      />
+      <Modal open={open} onClose={() => !uploading && setOpen(false)}>
+        <Card className={classes.card}>
+          <CardContent>
+            <ImageFileDropzone onDrop={addImageFiles} disabled={uploading}/>
+            <List className={classes.list}>
+              {imageFiles.map((imageFile, i) => (
+                <React.Fragment key={i}>
+                  <ImagePreviewListItem imageFile={imageFile} onDelete={() => deleteImageFileAt(i)}/>
+                  <Divider/>
+                </React.Fragment>
+              ))}
+            </List>
+          </CardContent>
+          <CardActions>
+            <LoadableButton
+              fullWidth
+              loading={uploading}
+              disabled={uploading}
+              color='primary'
+              variant='contained'
+              onClick={uploadLgtms}
+            >
+              Upload
+            </LoadableButton>
+          </CardActions>
+        </Card>
+      </Modal>
       <Grid container spacing={1}>
         {lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
