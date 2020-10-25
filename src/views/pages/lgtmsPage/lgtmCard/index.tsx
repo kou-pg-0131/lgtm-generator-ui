@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper, Popper } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
+import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import { Lgtm } from '../../../../domain';
 
@@ -36,6 +36,8 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   lgtm: Lgtm;
+  favorited: boolean;
+  onFavorite: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
 export const LgtmCard: React.FC<Props> = (props: Props) => {
@@ -86,8 +88,12 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
             <Button onClick={handleClickCopy}>
               <FileCopyOutlined fontSize='small'/>
             </Button>
-            <Button>
-              <FavoriteBorder fontSize='small'/>
+            <Button onClick={props.onFavorite}>
+              {props.favorited ? (
+                <Favorite fontSize='small'/>
+              ) : (
+                <FavoriteBorder fontSize='small'/>
+              )}
             </Button>
             <Button>
               <FlagOutlined fontSize='small'/>

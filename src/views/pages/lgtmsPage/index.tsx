@@ -58,6 +58,7 @@ export const LgtmsPage: React.FC = () => {
   const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
   const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
+  const toggleFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.toggleFavorite(lgtm));
 
   const apiClient = new ApiClient();
 
@@ -149,7 +150,11 @@ export const LgtmsPage: React.FC = () => {
       <Grid container spacing={1}>
         {lgtmsState.lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
-            <LgtmCard lgtm={lgtm}/>
+            <LgtmCard
+              lgtm={lgtm}
+              favorited={!!lgtmsState.favorites.find(e => e.id === lgtm.id)}
+              onFavorite={() => toggleFavorite(lgtm)}
+            />
           </Grid>
         ))}
       </Grid>
