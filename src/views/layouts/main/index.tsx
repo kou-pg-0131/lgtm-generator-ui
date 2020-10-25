@@ -21,7 +21,7 @@ export const Main: React.FC = () => {
   const [path, setPath] = useState<string>(location.pathname);
 
   const handleChange = (e: React.ChangeEvent<unknown>, value: string) => {
-    history.push(value);
+    history.replace({ pathname: value });
   };
 
   useEffect(() => {
