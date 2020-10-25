@@ -79,7 +79,7 @@ export const LgtmsPage: React.FC = () => {
     let uploadFailed = false;
     await Promise.all(imageFiles.map(async imageFile => {
       await apiClient.createLgtm({ base64: imageFile.base64 }).catch(() => {
-        enqueueSnackbar(`アップロードに失敗しました: ${imageFile.name}`, { variant: 'error' });
+        enqueueSnackbar(`アップロードに失敗しました: ${imageFile.name}`, { variant: 'warning' });
         uploadFailed = true;
       });
     })).then(() => {
@@ -97,7 +97,7 @@ export const LgtmsPage: React.FC = () => {
       await imageFileLoader.load(acceptedFile).then(imageFile => {
         setImageFiles((prev) => [...prev, imageFile]);
       }).catch(() => {
-        enqueueSnackbar(`対応していない画像形式です: ${acceptedFile.name}`, { variant: 'error' });
+        enqueueSnackbar(`対応していない画像形式です: ${acceptedFile.name}`, { variant: 'warning' });
       });
     }));
   };
