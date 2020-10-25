@@ -2,14 +2,22 @@ import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
 import { Route, Switch } from 'react-router-dom';
 import { Box, Container, Paper, Tab, Tabs } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FavoritesPage, LgtmsPage, NotFoundPage, SearchImagesPage } from '../../pages';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       paddingTop: 38,
+    },
+    tabs: {
+      marginBottom: 24,
+    },
+    tab: {
+      [theme.breakpoints.down('xs')]: {
+        fontSize: 12,
+      },
     },
   }),
 );
@@ -41,10 +49,11 @@ export const Main: React.FC = () => {
           indicatorColor='primary'
           textColor='primary'
           onChange={handleChange}
+          className={classes.tabs}
         >
-          <Tab label='LGTM 画像' value='lgtms'/>
-          <Tab label='画像検索' value='search_images'/>
-          <Tab label='お気に入り' value='favorites'/>
+          <Tab label='LGTM 画像' value='lgtms' className={classes.tab}/>
+          <Tab label='画像検索' value='search_images' className={classes.tab}/>
+          <Tab label='お気に入り' value='favorites' className={classes.tab}/>
         </Tabs>
       </Paper>
 
