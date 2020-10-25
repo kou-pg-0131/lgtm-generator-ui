@@ -56,7 +56,7 @@ export const LgtmsPage: React.FC = () => {
   const dispatch = useDispatch();
   const addLgtms = (lgtms: Lgtm[]) => dispatch(lgtmsActions.addLgtms(lgtms));
   const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
-  const setEvaluatedId = (evaluatedId: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
+  const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
 
   const apiClient = new ApiClient();
