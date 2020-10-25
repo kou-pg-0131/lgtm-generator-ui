@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper, Popper } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import { Lgtm } from '../../../domain';
 
@@ -46,10 +47,11 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
 
-  const handleClickCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(anchorEl ? undefined : e.currentTarget);
-  };
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClickCopy = (e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(anchorEl ? undefined : e.currentTarget);
   const closePopper = () => setAnchorEl(undefined);
+  const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
 
   useEffect(() => {
     if (anchorEl) {
@@ -68,13 +70,13 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
       <Popper open={!!anchorEl} anchorEl={anchorEl} placement='top' transition>
         <Paper>
           <List className={classes.list}>
-            <ListItem button className={classes.listItem}>
+            <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
               <CopyToClipBoard text={markdown}>
                 <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
               </CopyToClipBoard>
             </ListItem>
             <Divider/>
-            <ListItem button className={classes.listItem}>
+            <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
               <CopyToClipBoard text={html}>
                 <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
               </CopyToClipBoard>
