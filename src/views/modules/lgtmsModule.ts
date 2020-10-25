@@ -20,7 +20,7 @@ export const LgtmsModule = createSlice({
     clearLgtms: (state: LgtmsState) => {
       state.lgtms = [];
     },
-    setEvaluatedId: (state: LgtmsState, action: PayloadAction<string>) => {
+    setEvaluatedId: (state: LgtmsState, action: PayloadAction<string | undefined>) => {
       state.evaluatedId = action.payload;
     },
     clearEvaluatedId: (state: LgtmsState) => {
