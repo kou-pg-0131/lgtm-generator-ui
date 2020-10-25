@@ -32,6 +32,7 @@ export const Main: React.FC = () => {
     <Container maxWidth='lg' className={classes.root}>
       <Paper>
         <Tabs
+          variant='fullWidth'
           value={path}
           indicatorColor='primary'
           textColor='primary'
