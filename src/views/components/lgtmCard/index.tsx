@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListI
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import CopyToClipBoard from 'react-copy-to-clipboard';
-import { Lgtm } from '../../../../domain';
+import { Lgtm } from '../../../domain';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -38,6 +38,7 @@ type Props = {
   lgtm: Lgtm;
   favorited: boolean;
   onFavorite: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onUnfavorite: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
 export const LgtmCard: React.FC<Props> = (props: Props) => {
@@ -88,13 +89,15 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
             <Button onClick={handleClickCopy}>
               <FileCopyOutlined fontSize='small'/>
             </Button>
-            <Button onClick={props.onFavorite}>
               {props.favorited ? (
-                <Favorite fontSize='small'/>
+                <Button onClick={props.onUnfavorite}>
+                  <Favorite fontSize='small'/>
+                </Button>
               ) : (
-                <FavoriteBorder fontSize='small'/>
+                <Button onClick={props.onFavorite}>
+                  <FavoriteBorder fontSize='small'/>
+                </Button>
               )}
-            </Button>
             <Button>
               <FlagOutlined fontSize='small'/>
             </Button>

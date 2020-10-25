@@ -31,12 +31,12 @@ export const LgtmsModule = createSlice({
     clearEvaluatedId: (state: LgtmsState) => {
       state.evaluatedId = undefined;
     },
-    toggleFavorite: (state: LgtmsState, action: PayloadAction<Lgtm>) => {
-      if (state.favorites.find(e => e.id === action.payload.id)) {
-        state.favorites = state.favorites.filter(e => e.id !== action.payload.id);
-      } else {
-        state.favorites = [action.payload, ...state.favorites];
-      }
+    addFavorite: (state: LgtmsState, action: PayloadAction<Lgtm>) => {
+      state.favorites = [action.payload, ...state.favorites];
+      dataStore.setFavorites(state.favorites);
+    },
+    removeFavorite: (state: LgtmsState, action: PayloadAction<Lgtm>) => {
+      state.favorites = state.favorites.filter(e => e.id !== action.payload.id);
       dataStore.setFavorites(state.favorites);
     },
   },

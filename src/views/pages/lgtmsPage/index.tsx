@@ -5,10 +5,9 @@ import { AddCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { States, lgtmsActions } from '../../modules';
-import { FabButton, LoadableButton } from '../../components';
+import { FabButton, LgtmCard, LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
-import { LgtmCard } from './lgtmCard';
 import { MoreButton } from './moreButton';
 import { ImagePreviewListItem } from './imagePreviewListItem';
 import { ImageFileDropzone } from './imageFileDropzone';
@@ -58,7 +57,8 @@ export const LgtmsPage: React.FC = () => {
   const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
   const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
-  const toggleFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.toggleFavorite(lgtm));
+  const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
+  const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
 
   const apiClient = new ApiClient();
 
@@ -153,7 +153,8 @@ export const LgtmsPage: React.FC = () => {
             <LgtmCard
               lgtm={lgtm}
               favorited={!!lgtmsState.favorites.find(e => e.id === lgtm.id)}
-              onFavorite={() => toggleFavorite(lgtm)}
+              onFavorite={() => addFavorite(lgtm)}
+              onUnfavorite={() => removeFavorite(lgtm)}
             />
           </Grid>
         ))}
