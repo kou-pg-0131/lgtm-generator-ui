@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, Divider, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import { States, lgtmsActions } from '../../modules';
 import { FabButton, LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
@@ -45,12 +47,17 @@ const useStyles = makeStyles((theme: Theme) =>
 export const LgtmsPage: React.FC = () => {
   const classes = useStyles();
 
-  const [lgtms, setLgtms] = useState<Lgtm[]>([]);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
-  const [evaluatedId, setEvaluatedId] = useState<string>();
   const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const lgtmsState = useSelector((states: States) => states.lgtms);
+
+  const dispatch = useDispatch();
+  const addLgtms = (lgtms: Lgtm[]) => dispatch(lgtmsActions.addLgtms(lgtms));
+  const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
+  const setEvaluatedId = (evaluatedId: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
+  const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
 
   const apiClient = new ApiClient();
 
@@ -59,7 +66,7 @@ export const LgtmsPage: React.FC = () => {
   const loadLgtms = (evaluatedId?: string) => {
     setFetching(true);
     apiClient.getLgtms(evaluatedId).then(response => {
-      setLgtms((prev) => [...prev, ...response.lgtms]);
+      addLgtms(response.lgtms);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
       setFetching(false);
@@ -67,8 +74,8 @@ export const LgtmsPage: React.FC = () => {
   };
 
   const reloadLgtms = () => {
-    setLgtms([]);
-    setEvaluatedId(undefined);
+    clearLgtms();
+    clearEvaluatedId();
     loadLgtms();
   };
 
@@ -103,7 +110,7 @@ export const LgtmsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadLgtms();
+    if (lgtmsState.lgtms.length === 0) loadLgtms();
   }, []);
 
   return (
@@ -140,7 +147,7 @@ export const LgtmsPage: React.FC = () => {
         </Card>
       </Modal>
       <Grid container spacing={1}>
-        {lgtms.map(lgtm => (
+        {lgtmsState.lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
             <LgtmCard lgtm={lgtm}/>
           </Grid>
@@ -149,8 +156,8 @@ export const LgtmsPage: React.FC = () => {
 
       <MoreButton
         processing={fetching}
-        visible={Boolean(evaluatedId || fetching)}
-        onClick={() => loadLgtms(evaluatedId)}
+        visible={Boolean(lgtmsState.evaluatedId || fetching)}
+        onClick={() => loadLgtms(lgtmsState.evaluatedId)}
       />
     </React.Fragment>
   );
