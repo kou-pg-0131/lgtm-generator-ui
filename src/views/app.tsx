@@ -2,6 +2,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { CssBaseline, IconButton } from '@material-ui/core';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
@@ -11,7 +12,17 @@ import { Wrapper, Header, Main, Footer } from './layouts';
 const history = createBrowserHistory();
 const store = createStore();
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    icon: {
+      color: 'white',
+    },
+  }),
+);
+
 export const App: React.FC = () => {
+  const classes = useStyles();
+
   const notistackRef = React.createRef<SnackbarProvider>();
 
   const handleClickDissmiss = (key: React.ReactText) => {
@@ -26,7 +37,7 @@ export const App: React.FC = () => {
           ref={notistackRef}
           action={(key) => (
             <IconButton size='small' onClick={() => handleClickDissmiss(key)}>
-              <Close fontSize='small'/>
+              <Close fontSize='small' className={classes.icon}/>
             </IconButton>
           )}
           maxSnack={3}
