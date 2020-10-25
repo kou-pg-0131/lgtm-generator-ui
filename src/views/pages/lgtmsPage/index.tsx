@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, Divider, Grid, List, Modal } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
 import { FabButton, LoadableButton } from '../../components';
 import { Lgtm } from '../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
@@ -53,6 +54,8 @@ export const LgtmsPage: React.FC = () => {
 
   const apiClient = new ApiClient();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const loadLgtms = (evaluatedId?: string) => {
     setFetching(true);
     apiClient.getLgtms(evaluatedId).then(response => {
@@ -73,12 +76,16 @@ export const LgtmsPage: React.FC = () => {
 
   const uploadLgtms = async () => {
     setUploading(true);
+    let uploadFailed = false;
     await Promise.all(imageFiles.map(async imageFile => {
-      await apiClient.createLgtm({ base64: imageFile.base64 });
+      await apiClient.createLgtm({ base64: imageFile.base64 }).catch(() => {
+        enqueueSnackbar(`アップロードに失敗しました: ${imageFile.name}`, { variant: 'error' });
+        uploadFailed = true;
+      });
     })).then(() => {
-      reloadLgtms();
-      setOpen(false);
+      setOpen(uploadFailed);
     }).finally(() => {
+      reloadLgtms();
       setUploading(false);
     });
   };
@@ -87,8 +94,11 @@ export const LgtmsPage: React.FC = () => {
     if (uploading) return;
     const imageFileLoader = new ImageFileLoader();
     await Promise.all(acceptedFiles.map(async acceptedFile => {
-      const imageFile = await imageFileLoader.load(acceptedFile);
-      setImageFiles((prev) => [...prev, imageFile]);
+      await imageFileLoader.load(acceptedFile).then(imageFile => {
+        setImageFiles((prev) => [...prev, imageFile]);
+      }).catch(() => {
+        enqueueSnackbar(`対応していない画像形式です: ${acceptedFile.name}`, { variant: 'error' });
+      });
     }));
   };
 
