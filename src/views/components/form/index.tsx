@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {
   children: React.ReactNode;
-  onSubmit: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onSubmit: () => void;
 };
 
 export const Form: React.FC<Props> = (props: Props) => {
@@ -10,7 +10,6 @@ export const Form: React.FC<Props> = (props: Props) => {
     e.preventDefault();
     props.onSubmit();
   };
-
 
   return (
     <form onSubmit={handleSubmit}>
