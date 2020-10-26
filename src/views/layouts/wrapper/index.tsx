@@ -5,6 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
+      backgroundColor: '#f3f3f3',
       minHeight: '100vh',
       paddingBottom: 120,
       position: 'relative',
