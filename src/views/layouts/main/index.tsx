@@ -30,7 +30,7 @@ export const Main: React.FC = () => {
   const params = qs.parse(location.search);
   const getTab = () => ['lgtms', 'search_images', 'favorites'].find((e) => e === params.tab) || 'lgtms';
 
-  const [tab, setTab] = useState<string | undefined>(getTab());
+  const [tab, setTab] = useState<string>(getTab());
 
   const handleChange = (e: React.ChangeEvent<unknown>, value: string) => {
     history.replace({ search: `?tab=${value}` });
@@ -73,7 +73,8 @@ export const Main: React.FC = () => {
             </React.Fragment>
           );
         }}/>
-        <Route       path='*' component={NotFoundPage}/>
+
+        <Route path='*' component={NotFoundPage}/>
       </Switch>
     </Container>
   );
