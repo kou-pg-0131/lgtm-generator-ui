@@ -1,13 +1,21 @@
 import React from 'react';
-import { CardActions, CardMedia } from '@material-ui/core';
+import { CardActions, CardContent, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { LoadableButton, ModalCard } from '..';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    media: {
-      backgroundSize: 'contain',
-      height: 300,
+    content: {
+      paddingBottom: 0,
+      textAlign: 'center',
+    },
+    text: {
+      marginBottom: 12,
+    },
+    img: {
+      border: '1px solid #ddd',
+      maxHeight: 300,
+      maxWidth: '100%',
     },
   }),
 );
@@ -16,7 +24,7 @@ type Props = {
   imageSrc: string;
   open: boolean;
   onGenerate: () => void;
-  processing: boolean;
+  generating: boolean;
   onClose: () => void;
 };
 
@@ -25,12 +33,14 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
 
   return (
     <ModalCard open={props.open} onClose={props.onClose}>
-      <CardMedia className={classes.media} image={props.imageSrc}/>
+      <CardContent className={classes.content}>
+        <Typography className={classes.text}>この画像で LGTM 画像を生成しますか？</Typography>
+        <img className={classes.img} src={props.imageSrc}/>
+      </CardContent>
       <CardActions>
         <LoadableButton
           fullWidth
-          loading={props.processing}
-          disabled={props.processing}
+          loading={props.generating}
           color='primary'
           variant='contained'
           onClick={props.onGenerate}

@@ -60,7 +60,7 @@ export const SearchImagesPage: React.FC = () => {
         <GenerateConfirm
           imageSrc={image.url}
           open={!!image}
-          processing={generating}
+          generating={generating}
           onClose={() => setImage(undefined)}
           onGenerate={() => generateLgtm(image)}
         />

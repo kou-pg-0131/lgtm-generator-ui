@@ -97,7 +97,7 @@ export const LgtmsPage: React.FC = () => {
           imageSrc={`data:${imageFile.type};base64,${imageFile.base64}`}
           open={!!imageFile}
           onGenerate={() => generateLgtm(imageFile)}
-          processing={uploading}
+          generating={uploading}
           onClose={() => setImageFile(undefined)}
         />
       )}
