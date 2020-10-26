@@ -39,8 +39,8 @@ const useStyles = makeStyles(() =>
 type Props = {
   lgtm: Lgtm;
   favorited: boolean;
-  onFavorite: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  onUnfavorite: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onFavorite: () => void;
+  onUnfavorite: () => void;
 };
 
 export const LgtmCard: React.FC<Props> = (props: Props) => {
@@ -49,9 +49,6 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
-
-  const html = `<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}"/>`;
-  const markdown = `![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})`;
 
   return (
     <React.Fragment>
@@ -64,13 +61,13 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
                 <Paper>
                   <List className={classes.list}>
                     <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-                      <CopyToClipBoard text={markdown}>
+                      <CopyToClipBoard text={`![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})`}>
                         <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
                       </CopyToClipBoard>
                     </ListItem>
                     <Divider/>
                     <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-                      <CopyToClipBoard text={html}>
+                      <CopyToClipBoard text={`<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}"/>`}>
                         <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
                       </CopyToClipBoard>
                     </ListItem>
@@ -81,17 +78,11 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
               <FileCopyOutlined fontSize='small'/>
             </ButtonWithPopper>
               {props.favorited ? (
-                <Button onClick={props.onUnfavorite}>
-                  <Favorite fontSize='small'/>
-                </Button>
+                <Button onClick={props.onUnfavorite}><Favorite fontSize='small'/></Button>
               ) : (
-                <Button onClick={props.onFavorite}>
-                  <FavoriteBorder fontSize='small'/>
-                </Button>
+                <Button onClick={props.onFavorite}><FavoriteBorder fontSize='small'/></Button>
               )}
-            <Button>
-              <FlagOutlined fontSize='small'/>
-            </Button>
+            <Button><FlagOutlined fontSize='small'/></Button>
           </ButtonGroup>
         </CardActions>
       </Card>
