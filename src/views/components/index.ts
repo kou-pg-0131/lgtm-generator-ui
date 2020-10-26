@@ -1,3 +1,4 @@
+export * from './buttonWithPopper';
 export * from './fabButton';
 export * from './form';
 export * from './generateConfirm';
