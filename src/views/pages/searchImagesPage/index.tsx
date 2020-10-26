@@ -58,7 +58,7 @@ export const SearchImagesPage: React.FC = () => {
     <React.Fragment>
       {image && (
         <GenerateConfirm
-          image={image}
+          imageSrc={image.url}
           open={!!image}
           processing={generating}
           onClose={() => setImage(undefined)}
