@@ -7,6 +7,7 @@ const useStyles = makeStyles(() =>
   createStyles({
     logo: {
       color: '#fff',
+      fontFamily: 'ArchivoBlack',
       fontSize: 36,
     },
   }),
