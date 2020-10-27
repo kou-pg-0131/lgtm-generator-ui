@@ -7,7 +7,6 @@ const useStyles = makeStyles(() =>
     root: {
       marginTop: 32,
       height: 40,
-      textAlign: 'center',
     },
   }),
 );
@@ -15,7 +14,7 @@ const useStyles = makeStyles(() =>
 type Props = {
   visible: boolean;
   processing: boolean;
-  onClick: () => any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onClick: () => void;
 };
 
 export const MoreButton: React.FC<Props> = (props: Props) => {
@@ -23,7 +22,7 @@ export const MoreButton: React.FC<Props> = (props: Props) => {
 
   if (!props.visible) return null;
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} textAlign='center'>
       {props.processing ? (
         <CircularProgress/>
       ) : (
