@@ -26,7 +26,7 @@ export const MoreButton: React.FC<Props> = (props: Props) => {
       {props.processing ? (
         <CircularProgress/>
       ) : (
-        <Button color='primary' variant='contained' onClick={props.onClick}>More</Button>
+        <Button color='primary' variant='contained' onClick={props.onClick}>さらに読み込む</Button>
       )}
     </Box>
   );
