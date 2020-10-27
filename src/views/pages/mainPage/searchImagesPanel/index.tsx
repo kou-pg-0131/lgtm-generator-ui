@@ -3,8 +3,10 @@ import { Box, Card, CardMedia, CardActionArea, CircularProgress, Grid, InputAdor
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
+import { useDispatch } from 'react-redux';
+import { lgtmsActions } from '../../../modules';
 import { Form, GenerateConfirm } from '../../../components';
-import { Image } from '../../../../domain';
+import { Image, Lgtm } from '../../../../domain';
 import { ApiClient } from '../../../../infrastructures';
 
 const useStyles = makeStyles(() =>
@@ -31,11 +33,29 @@ export const SearchImagesPanel: React.FC = () => {
   const [query, setQuery] = useState<string>('');
   const [searching, setSearching] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
+  const addLgtms = (lgtms: Lgtm[]) => dispatch(lgtmsActions.addLgtms(lgtms));
+  const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
+  const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
+  const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
+
   const apiClient = new ApiClient();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
+
+  const reloadLgtms = () => {
+    // setFetching(true); // TODO
+    clearLgtms();
+    clearEvaluatedId();
+    apiClient.getLgtms().then(response => {
+      addLgtms(response.lgtms);
+      setEvaluatedId(response.evaluated_id);
+    }).finally(() => {
+      // setFetching(false); // TODO
+    });
+  };
 
   const handleSearch = () => {
     setSearching(true);
@@ -57,6 +77,7 @@ export const SearchImagesPanel: React.FC = () => {
     apiClient.createLgtm({ url: image.url }).then(() => {
       enqueueSnackbar('LGTM 画像を生成しました');
       setImage(undefined);
+      reloadLgtms();
     }).catch(() => {
       enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'error' });
     }).finally(() => {
