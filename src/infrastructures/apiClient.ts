@@ -15,7 +15,7 @@ export class ApiClient {
     return response.data;
   }
 
-  public async createLgtm(params: { base64: string; }): Promise<Lgtm> {
+  public async createLgtm(params: { base64?: string; url?: string; }): Promise<Lgtm> {
     const response = await axios.post(this.endpoints.v1.lgtms, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } });
     return response.data;
   }

@@ -52,14 +52,16 @@ export const SearchImagesPanel: React.FC = () => {
     setImage(image);
   };
 
-  // TODO: implement
   const generateLgtm = (image: Image) => {
     setGenerating(true);
-    setTimeout(() => {
+    apiClient.createLgtm({ url: image.url }).then(() => {
       enqueueSnackbar('LGTM 画像を生成しました');
       setImage(undefined);
+    }).catch(() => {
+      enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'error' });
+    }).finally(() => {
       setGenerating(false);
-    }, 1000);
+    });
   };
 
   return (
