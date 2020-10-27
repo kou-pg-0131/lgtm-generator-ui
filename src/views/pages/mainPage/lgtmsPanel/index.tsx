@@ -24,13 +24,15 @@ export const LgtmsPanel: React.FC = () => {
   const inputFileRef = React.createRef<HTMLInputElement>();
 
   const [imageFile, setImageFile] = useState<ImageFile>();
-  const [lgtms, setLgtms] = useState<Lgtm[]>([]);
-  const [evaluatedId, setEvaluatedId] = useState<string>();
   const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
   const dispatch = useDispatch();
+  const addLgtms = (lgtms: Lgtm[]) => dispatch(lgtmsActions.addLgtms(lgtms));
+  const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
+  const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
+  const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
   const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
 
@@ -41,15 +43,16 @@ export const LgtmsPanel: React.FC = () => {
   const loadLgtms = (evaluatedId?: string) => {
     setFetching(true);
     apiClient.getLgtms(evaluatedId).then(response => {
-      setLgtms((prev) => [...prev, ...response.lgtms]);
+      addLgtms(response.lgtms);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
       setFetching(false);
     });
   };
+
   const reloadLgtms = () => {
-    setLgtms([]);
-    setEvaluatedId(undefined);
+    clearLgtms();
+    clearEvaluatedId();
     loadLgtms();
   };
 
@@ -71,7 +74,7 @@ export const LgtmsPanel: React.FC = () => {
       enqueueSnackbar('LGTM 画像を生成しました');
       setImageFile(undefined);
     }).catch(() => {
-      enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'error' });
+      enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'warning' });
     }).finally(() => {
       reloadLgtms();
       setUploading(false);
@@ -79,7 +82,7 @@ export const LgtmsPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    loadLgtms();
+    if (lgtmsState.lgtms.length === 0) loadLgtms();
   }, []);
 
   return (
@@ -99,7 +102,7 @@ export const LgtmsPanel: React.FC = () => {
         />
       )}
       <Grid container spacing={1}>
-        {lgtms.map(lgtm => (
+        {lgtmsState.lgtms.map(lgtm => (
           <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
             <LgtmCard
               lgtm={lgtm}
@@ -113,8 +116,8 @@ export const LgtmsPanel: React.FC = () => {
 
       <MoreButton
         processing={fetching}
-        visible={Boolean(evaluatedId || fetching)}
-        onClick={() => loadLgtms(evaluatedId)}
+        visible={Boolean(lgtmsState.evaluatedId || fetching)}
+        onClick={() => loadLgtms(lgtmsState.evaluatedId)}
       />
     </React.Fragment>
   );
