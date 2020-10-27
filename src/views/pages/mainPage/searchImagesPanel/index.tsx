@@ -3,9 +3,9 @@ import { Box, Card, CardMedia, CardActionArea, CircularProgress, Grid, InputAdor
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import { Form, GenerateConfirm } from '../../components';
-import { Image } from '../../../domain';
-import { ApiClient } from '../../../infrastructures';
+import { Form, GenerateConfirm } from '../../../components';
+import { Image } from '../../../../domain';
+import { ApiClient } from '../../../../infrastructures';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export const SearchImagesPage: React.FC = () => {
+export const SearchImagesPanel: React.FC = () => {
   const classes = useStyles();
 
   const [images, setImages] = useState<Image[]>([]);

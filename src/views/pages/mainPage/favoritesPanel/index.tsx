@@ -1,11 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
-import { lgtmsActions, States } from '../../modules';
-import { LgtmCard } from '../../components';
-import { Lgtm } from '../../../domain';
+import { lgtmsActions, States } from '../../../modules';
+import { LgtmCard } from '../../../components';
+import { Lgtm } from '../../../../domain';
 
-export const FavoritesPage: React.FC = () => {
+export const FavoritesPanel: React.FC = () => {
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
   const dispatch = useDispatch();

@@ -3,7 +3,9 @@ import * as qs from 'query-string';
 import { Box, Paper, Tab, Tabs } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import { FavoritesPage, LgtmsPage, SearchImagesPage } from '../../pages';
+import { LgtmsPanel } from './lgtmsPanel';
+import { SearchImagesPanel } from './searchImagesPanel';
+import { FavoritesPanel } from './favoritesPanel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,13 +59,13 @@ export const MainPage: React.FC = () => {
       </Paper>
 
       <Box hidden={tab !== 'lgtms'}>
-        <LgtmsPage/>
+        <LgtmsPanel/>
       </Box>
       <Box hidden={tab !== 'search_images'}>
-        <SearchImagesPage/>
+        <SearchImagesPanel/>
       </Box>
       <Box hidden={tab !== 'favorites'}>
-        <FavoritesPage/>
+        <FavoritesPanel/>
       </Box>
     </React.Fragment>
   );

@@ -4,10 +4,10 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { States, lgtmsActions } from '../../modules';
-import { FabButton, GenerateConfirm, LgtmCard } from '../../components';
-import { Lgtm } from '../../../domain';
-import { ApiClient, ImageFile, ImageFileLoader } from '../../../infrastructures';
+import { States, lgtmsActions } from '../../../modules';
+import { FabButton, GenerateConfirm, LgtmCard } from '../../../components';
+import { Lgtm } from '../../../../domain';
+import { ApiClient, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
 
 const useStyles = makeStyles(() =>
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export const LgtmsPage: React.FC = () => {
+export const LgtmsPanel: React.FC = () => {
   const classes = useStyles();
 
   const inputFileRef = React.createRef<HTMLInputElement>();
