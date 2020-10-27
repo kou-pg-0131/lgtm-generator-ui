@@ -52,21 +52,15 @@ export const MainPage: React.FC = () => {
           onChange={handleChange}
           className={classes.tabs}
         >
-          <Tab label='LGTM 画像' value='lgtms' className={classes.tab}/>
-          <Tab label='画像検索' value='search_images' className={classes.tab}/>
-          <Tab label='お気に入り' value='favorites' className={classes.tab}/>
+          <Tab label='LGTM 画像' className={classes.tab} value='lgtms'/>
+          <Tab label='画像検索' className={classes.tab} value='search_images'/>
+          <Tab label='お気に入り' className={classes.tab} value='favorites'/>
         </Tabs>
       </Paper>
 
-      <Box hidden={tab !== 'lgtms'}>
-        <LgtmsPanel/>
-      </Box>
-      <Box hidden={tab !== 'search_images'}>
-        <SearchImagesPanel/>
-      </Box>
-      <Box hidden={tab !== 'favorites'}>
-        <FavoritesPanel/>
-      </Box>
+      <Box hidden={tab !== 'lgtms'}><LgtmsPanel/></Box>
+      <Box hidden={tab !== 'search_images'}><SearchImagesPanel/></Box>
+      <Box hidden={tab !== 'favorites'}><FavoritesPanel/></Box>
     </React.Fragment>
   );
 };
