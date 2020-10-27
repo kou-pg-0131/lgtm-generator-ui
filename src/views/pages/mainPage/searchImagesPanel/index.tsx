@@ -38,6 +38,7 @@ export const SearchImagesPanel: React.FC = () => {
   const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
   const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
+  const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
   const apiClient = new ApiClient();
 
@@ -46,14 +47,14 @@ export const SearchImagesPanel: React.FC = () => {
   const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
 
   const reloadLgtms = () => {
-    // setFetching(true); // TODO
+    setFetchingLgtms(true);
     clearLgtms();
     clearEvaluatedId();
     apiClient.getLgtms().then(response => {
       addLgtms(response.lgtms);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
-      // setFetching(false); // TODO
+      setFetchingLgtms(false);
     });
   };
 

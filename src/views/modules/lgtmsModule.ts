@@ -8,11 +8,13 @@ export type LgtmsState = {
   favorites: Lgtm[];
   lgtms: Lgtm[];
   evaluatedId?: string;
+  fetchingLgtms: boolean;
 };
 
 const initialState: LgtmsState = {
   favorites: dataStore.getFavorites(),
   lgtms: [],
+  fetchingLgtms: false,
 };
 
 export const LgtmsModule = createSlice({
@@ -24,6 +26,9 @@ export const LgtmsModule = createSlice({
     },
     clearLgtms: (state: LgtmsState) => {
       state.lgtms = [];
+    },
+    setFetchingLgtms: (state: LgtmsState, action: PayloadAction<boolean>) => {
+      state.fetchingLgtms = action.payload;
     },
     setEvaluatedId: (state: LgtmsState, action: PayloadAction<string | undefined>) => {
       state.evaluatedId = action.payload;

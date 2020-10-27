@@ -24,7 +24,6 @@ export const LgtmsPanel: React.FC = () => {
   const inputFileRef = React.createRef<HTMLInputElement>();
 
   const [imageFile, setImageFile] = useState<ImageFile>();
-  const [fetching, setFetching] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
@@ -35,18 +34,19 @@ export const LgtmsPanel: React.FC = () => {
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
   const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
+  const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
   const apiClient = new ApiClient();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const loadLgtms = (evaluatedId?: string) => {
-    setFetching(true);
+    setFetchingLgtms(true);
     apiClient.getLgtms(evaluatedId).then(response => {
       addLgtms(response.lgtms);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
-      setFetching(false);
+      setFetchingLgtms(false);
     });
   };
 
@@ -115,8 +115,8 @@ export const LgtmsPanel: React.FC = () => {
       </Grid>
 
       <MoreButton
-        processing={fetching}
-        visible={Boolean(lgtmsState.evaluatedId || fetching)}
+        processing={lgtmsState.fetchingLgtms}
+        visible={Boolean(lgtmsState.evaluatedId || lgtmsState.fetchingLgtms)}
         onClick={() => loadLgtms(lgtmsState.evaluatedId)}
       />
     </React.Fragment>
