@@ -45,7 +45,7 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
           variant='contained'
           onClick={props.onGenerate}
         >
-          LGTM 画像を生成する
+          LGTM 画像を生成
         </LoadableButton>
       </CardActions>
     </ModalCard>

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import CopyToClipBoard from 'react-copy-to-clipboard';
-import { ButtonWithPopper } from '..';
-import { Lgtm } from '../../../domain';
+import { ButtonWithPopper, ReportForm } from '..';
+import { Lgtm, ReportType } from '../../../domain';
+import { ApiClient } from '../../../infrastructures';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -46,12 +47,42 @@ type Props = {
 export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
+  const [openReportForm, setOpenReportForm] = useState<boolean>(false);
+  const [reporting, setReporting] = useState<boolean>(false);
+  const [reportType, setReportType] = useState<ReportType>();
+  const [reportText, setReportText] = useState<string>('');
+
+  const apiClient = new ApiClient();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
+  const reportLgtm = () => {
+    setReporting(true);
+    apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
+      enqueueSnackbar('送信しました');
+      setReportType(undefined);
+      setReportText('');
+      setOpenReportForm(false);
+    }).catch(() => {
+      enqueueSnackbar('送信失敗しました', { variant: 'error' });
+    }).finally(() => {
+      setReporting(false);
+    });
+  };
 
   return (
     <React.Fragment>
+      <ReportForm
+        text={reportText}
+        type={reportType}
+        onChangeType={setReportType}
+        onChangeText={setReportText}
+        open={openReportForm}
+        onClose={() => setOpenReportForm(false)}
+        processing={reporting}
+        onReport={reportLgtm}
+      />
       <Card className={classes.card}>
         <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
@@ -77,12 +108,12 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
             >
               <FileCopyOutlined fontSize='small'/>
             </ButtonWithPopper>
-              {props.favorited ? (
-                <Button onClick={props.onUnfavorite}><Favorite fontSize='small'/></Button>
-              ) : (
-                <Button onClick={props.onFavorite}><FavoriteBorder fontSize='small'/></Button>
-              )}
-            <Button><FlagOutlined fontSize='small'/></Button>
+            {props.favorited ? (
+              <Button onClick={props.onUnfavorite}><Favorite fontSize='small'/></Button>
+            ) : (
+              <Button onClick={props.onFavorite}><FavoriteBorder fontSize='small'/></Button>
+            )}
+            <Button onClick={() => setOpenReportForm(true)}><FlagOutlined fontSize='small'/></Button>
           </ButtonGroup>
         </CardActions>
       </Card>

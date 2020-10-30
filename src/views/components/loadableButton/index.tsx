@@ -9,7 +9,7 @@ export const LoadableButton: React.FC<Props> = (props: Props) => {
   const { loading, children, ...attrs } = props;
 
   return (
-    <Button {...attrs} disabled={loading}>
+    <Button {...attrs} disabled={props.disabled || loading}>
       {loading ? (
         <CircularProgress size={24}/>
       ) : (
