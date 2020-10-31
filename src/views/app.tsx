@@ -1,12 +1,13 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import { CssBaseline, IconButton } from '@material-ui/core';
+import { CssBaseline, ThemeProvider, IconButton } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import { createStore } from './modules';
+import { Theme } from './theme';
 import { Wrapper, Header, Main, Footer } from './layouts';
 
 const history = createBrowserHistory();
@@ -30,7 +31,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <React.Fragment>
+    <ThemeProvider theme={Theme}>
       <CssBaseline/>
       <Provider store={store}>
         <SnackbarProvider
@@ -54,6 +55,6 @@ export const App: React.FC = () => {
           </Router>
         </SnackbarProvider>
       </Provider>
-    </React.Fragment>
+    </ThemeProvider>
   );
 };
