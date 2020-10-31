@@ -89,7 +89,7 @@ export const LgtmsPanel: React.FC = () => {
       <FabButton color='primary' onClick={() => inputFileRef.current?.click()} variant='extended'>
         <input onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
         <AddCircle className={classes.addIcon}/>
-        Upload
+        アップロード
       </FabButton>
       {imageFile && (
         <GenerateConfirm
