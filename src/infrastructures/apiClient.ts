@@ -1,19 +1,20 @@
 import axios from 'axios';
-import * as path from 'path';
 import { Report, ReportType, Image, Lgtm } from '../domain';
 
+// TODO: refactor
 export class ApiClient {
   private endpoints = {
+    // TODO: use url-join
     v1: {
-      lgtms: path.join(process.env.REACT_APP_API_ORIGIN, 'v1/lgtms'),
-      images: path.join(process.env.REACT_APP_API_ORIGIN, 'v1/images'),
-      reports: path.join(process.env.REACT_APP_API_ORIGIN, 'v1/reports'),
+      lgtms: process.env.REACT_APP_API_ORIGIN + '/v1/lgtms',
+      images: process.env.REACT_APP_API_ORIGIN + '/v1/images',
+      reports: process.env.REACT_APP_API_ORIGIN + '/v1/reports',
     },
   };
 
   public async getLgtms(evaluatedId?: string): Promise<{ lgtms: Lgtm[]; evaluated_id?: string; }> {
-    // TODO: refactor
-    const response = await axios.get(`${this.endpoints.v1.lgtms}?evaluated_id=${evaluatedId}`, { headers: { 'Content-Type': 'application/json' } });
+    const endpoint = evaluatedId ? `${this.endpoints.v1.lgtms}?evaluated_id=${evaluatedId}` : this.endpoints.v1.lgtms;
+    const response = await axios.get(endpoint, { headers: { 'Content-Type': 'application/json' } });
     return response.data;
   }
 
