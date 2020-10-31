@@ -6,3 +6,5 @@ export * from './lgtmCard';
 export * from './loadableButton';
 export * from './modalCard';
 export * from './reportForm';
+export * from './gridContainer';
+export * from './gridItem';

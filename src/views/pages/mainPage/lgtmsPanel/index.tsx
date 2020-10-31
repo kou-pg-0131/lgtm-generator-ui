@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { States, lgtmsActions } from '../../../modules';
-import { FabButton, GenerateConfirm, LgtmCard } from '../../../components';
+import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard } from '../../../components';
 import { Lgtm } from '../../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
@@ -101,18 +100,18 @@ export const LgtmsPanel: React.FC = () => {
           onClose={() => setImageFile(undefined)}
         />
       )}
-      <Grid container spacing={1}>
+      <GridContainer>
         {lgtmsState.lgtms.map(lgtm => (
-          <Grid key={lgtm.id} item xs={6} sm={3} md={2}>
+          <GridItem key={lgtm.id}>
             <LgtmCard
               lgtm={lgtm}
               favorited={!!lgtmsState.favorites.find(e => e.id === lgtm.id)}
               onFavorite={() => addFavorite(lgtm)}
               onUnfavorite={() => removeFavorite(lgtm)}
             />
-          </Grid>
+          </GridItem>
         ))}
-      </Grid>
+      </GridContainer>
 
       <MoreButton
         processing={lgtmsState.fetchingLgtms}

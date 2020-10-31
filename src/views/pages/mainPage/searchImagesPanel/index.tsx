@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Card, CardMedia, CardActionArea, CircularProgress, Grid, InputAdornment, TextField } from '@material-ui/core';
+import { Box, Card, CardMedia, CardActionArea, CircularProgress, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from 'react-redux';
 import { lgtmsActions } from '../../../modules';
-import { Form, GenerateConfirm } from '../../../components';
+import { Form, GenerateConfirm, GridContainer, GridItem } from '../../../components';
 import { Image, Lgtm } from '../../../../domain';
 import { ApiClient } from '../../../../infrastructures';
 
@@ -118,17 +118,17 @@ export const SearchImagesPanel: React.FC = () => {
         {searching ? (
           <Box textAlign='center'><CircularProgress/></Box>
         ) : (
-          <Grid container spacing={2}>
+          <GridContainer>
             {images.map((image, i) => (
-              <Grid key={i} item xs={6} sm={3} md={2}>
+              <GridItem key={i}>
                 <Card>
                   <CardActionArea onClick={() => handleClickImage(image)}>
                     <CardMedia className={classes.media} image={image.url}/>
                   </CardActionArea>
                 </Card>
-              </Grid>
+              </GridItem>
             ))}
-          </Grid>
+          </GridContainer>
         )}
       </Box>
     </React.Fragment>
