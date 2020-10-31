@@ -91,7 +91,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
       <Card className={classes.card}>
         <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
-          <ButtonGroup color='primary' className={classes.buttonGroup}>
+          <ButtonGroup variant='contained' color='primary' className={classes.buttonGroup}>
             <ButtonWithPopper
               popperContent={
                 <Paper>
@@ -114,11 +114,11 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
               <FileCopyOutlined fontSize='small'/>
             </ButtonWithPopper>
             {props.favorited ? (
-              <Button onClick={props.onUnfavorite}><Favorite fontSize='small'/></Button>
+              <Button onClick={props.onUnfavorite} style={{ backgroundColor: 'pink', borderColor: 'pink' }}><Favorite style={{ color: 'red' }} fontSize='small'/></Button>
             ) : (
-              <Button onClick={props.onFavorite}><FavoriteBorder fontSize='small'/></Button>
+              <Button onClick={props.onFavorite} style={{ backgroundColor: 'white', borderColor: 'white' }}><FavoriteBorder style={{ color: 'pink' }} fontSize='small'/></Button>
             )}
-            <Button onClick={() => setOpenReportForm(true)}><FlagOutlined fontSize='small'/></Button>
+            <Button onClick={() => setOpenReportForm(true)} style={{ backgroundColor: 'orange' }}><FlagOutlined fontSize='small'/></Button>
           </ButtonGroup>
         </CardActions>
       </Card>
