@@ -56,14 +56,18 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const closeReportForm = () => {
+    setReportType(undefined);
+    setReportText('');
+    setOpenReportForm(false);
+  };
+
   const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
   const reportLgtm = () => {
     setReporting(true);
     apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
       enqueueSnackbar('送信しました');
-      setReportType(undefined);
-      setReportText('');
-      setOpenReportForm(false);
+      closeReportForm();
     }).catch(() => {
       enqueueSnackbar('送信失敗しました', { variant: 'error' });
     }).finally(() => {
@@ -74,12 +78,13 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   return (
     <React.Fragment>
       <ReportForm
+        lgtm={props.lgtm}
         text={reportText}
         type={reportType}
         onChangeType={setReportType}
         onChangeText={setReportText}
         open={openReportForm}
-        onClose={() => setOpenReportForm(false)}
+        onClose={closeReportForm}
         processing={reporting}
         onReport={reportLgtm}
       />
