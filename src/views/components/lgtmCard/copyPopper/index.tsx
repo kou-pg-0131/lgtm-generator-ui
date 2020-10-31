@@ -42,7 +42,7 @@ export const CopyPopper: React.FC<Props> = (props: Props) => {
         </ListItem>
         <Divider/>
         <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-          <CopyToClipBoard text={`<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}"/>`}>
+          <CopyToClipBoard text={`<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/>`}>
             <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
           </CopyToClipBoard>
         </ListItem>
