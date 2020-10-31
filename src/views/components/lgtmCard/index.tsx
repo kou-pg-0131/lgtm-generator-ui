@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Card, CardActions, CardMedia, Divider, List, ListItem, ListItemText, Paper } from '@material-ui/core';
+import { Button, ButtonGroup, Card, CardActions, CardMedia } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import CopyToClipBoard from 'react-copy-to-clipboard';
+import { CopyPopper } from './copyPopper';
 import { ButtonWithPopper, ReportForm } from '..';
 import { Lgtm, ReportType } from '../../../domain';
 import { ApiClient } from '../../../infrastructures';
@@ -62,7 +62,6 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
     setOpenReportForm(false);
   };
 
-  const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
   const reportLgtm = () => {
     setReporting(true);
     apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
@@ -92,25 +91,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
         <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
           <ButtonGroup variant='contained' color='primary' className={classes.buttonGroup}>
-            <ButtonWithPopper
-              popperContent={
-                <Paper>
-                  <List className={classes.list}>
-                    <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-                      <CopyToClipBoard text={`![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})`}>
-                        <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
-                      </CopyToClipBoard>
-                    </ListItem>
-                    <Divider/>
-                    <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-                      <CopyToClipBoard text={`<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}"/>`}>
-                        <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
-                      </CopyToClipBoard>
-                    </ListItem>
-                  </List>
-                </Paper>
-              }
-            >
+            <ButtonWithPopper popperContent={<CopyPopper lgtm={props.lgtm}/>}>
               <FileCopyOutlined fontSize='small'/>
             </ButtonWithPopper>
             {props.favorited ? (
