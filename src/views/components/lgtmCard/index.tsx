@@ -87,7 +87,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
         onReport={reportLgtm}
       />
       <Card className={classes.card}>
-        <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
+        <CardMedia image={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
           <ButtonGroup
             lgtm={props.lgtm}
