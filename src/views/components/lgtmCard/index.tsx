@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Card, CardActions, CardMedia } from '@material-ui/core';
+import { Card, CardActions, CardMedia } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import { CopyPopper } from './copyPopper';
-import { ButtonWithPopper, ReportForm } from '..';
+import { ButtonGroup } from './buttonGroup';
+import { ReportForm } from '..';
 import { Lgtm, ReportType } from '../../../domain';
 import { ApiClient } from '../../../infrastructures';
 
@@ -90,17 +89,13 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
       <Card className={classes.card}>
         <CardMedia image={`https://lgtm-generator-api-dev-lgtms.s3.amazonaws.com/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
         <CardActions disableSpacing className={classes.actions}>
-          <ButtonGroup variant='contained' color='primary' className={classes.buttonGroup}>
-            <ButtonWithPopper popperContent={<CopyPopper lgtm={props.lgtm}/>}>
-              <FileCopyOutlined fontSize='small'/>
-            </ButtonWithPopper>
-            {props.favorited ? (
-              <Button onClick={props.onUnfavorite} style={{ backgroundColor: 'pink', borderColor: 'pink' }}><Favorite style={{ color: 'red' }} fontSize='small'/></Button>
-            ) : (
-              <Button onClick={props.onFavorite} style={{ backgroundColor: 'white', borderColor: 'white' }}><FavoriteBorder style={{ color: 'pink' }} fontSize='small'/></Button>
-            )}
-            <Button onClick={() => setOpenReportForm(true)} style={{ backgroundColor: 'orange' }}><FlagOutlined fontSize='small'/></Button>
-          </ButtonGroup>
+          <ButtonGroup
+            lgtm={props.lgtm}
+            favorited={props.favorited}
+            onFavorite={props.onFavorite}
+            onUnfavorite={props.onUnfavorite}
+            onReport={() => setOpenReportForm(true)}
+          />
         </CardActions>
       </Card>
     </React.Fragment>
