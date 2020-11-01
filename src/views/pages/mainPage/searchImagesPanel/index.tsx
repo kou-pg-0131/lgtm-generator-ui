@@ -100,6 +100,7 @@ export const SearchImagesPanel: React.FC = () => {
       )}
       <Form onSubmit={handleSearch}>
         <TextField
+          type='search'
           className={classes.input}
           disabled={searching}
           fullWidth
@@ -107,12 +108,8 @@ export const SearchImagesPanel: React.FC = () => {
           value={query}
           onChange={handleChangeQuery}
           placeholder='キーワード'
-          inputProps={{
-            maxLength: 255,
-          }}
-          InputProps={{
-            startAdornment: <InputAdornment position='start'><Search/></InputAdornment>,
-          }}
+          inputProps={{ maxLength: 255 }}
+          InputProps={{ startAdornment: <InputAdornment position='start'><Search/></InputAdornment> }}
         />
       </Form>
       <Box className={classes.images}>
