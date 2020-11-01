@@ -132,3 +132,12 @@ workflows:
           name: deploy_dev
           stage: dev
           requires: [terraform_apply_dev]
+
+      - terraform_apply:
+          name: terraform_apply_prod
+          stage: prod
+          requires: [approval_deploy]
+      - deploy:
+          name: deploy_prod
+          stage: prod
+          requires: [terraform_apply_prod]
