@@ -1,0 +1,55 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@3.4.2
+
+executors:
+  terraform:
+    docker:
+      - image: hashicorp/terraform:0.13.5
+
+commands:
+  terraform:
+    parameters:
+      stage:
+        type: string
+      command:
+        type: string
+    steps:
+      - run:
+          name: terraform << parameters.command >> - << parameters.stage >>
+          command: |
+            cd ~/project/terraform/envs/<< parameters.stage >>
+            terraform << parameters.command >>
+
+  setup_aws_config:
+    steps:
+      - run:
+          name: create aws/credentials aws/config
+          command: |
+            mkdir -p ~/.aws
+            echo '[default]'                                       > ~/.aws/credentials
+            echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}"         >> ~/.aws/credentials
+            echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
+            echo '[default]'                                       > ~/.aws/config
+            echo "region = us-east-1"                             >> ~/.aws/config
+
+jobs:
+  terraform_plan:
+    executor: terraform
+    steps:
+      - checkout
+      - run: apk --update add curl bash
+      - setup_aws_config
+      - terraform:
+          stage: dev
+          command: init
+      - terraform:
+          stage: dev
+          command: plan
+      - slack/status
+
+workflows:
+  build:
+    jobs:
+      - terraform_plan
