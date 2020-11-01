@@ -101,9 +101,9 @@ jobs:
             wget --quiet -O- https://yarnpkg.com/install.sh | bash -s -- --version 1.22.5
       - yarn_install
       - run: yarn run build:<< parameters.stage >>
-      # - run:
-      #     name: upload files to s3
-      #     command: aws s3 sync ./build s3://todo-app-ui-<< parameters.stage >>-deployment/ --delete
+      - run:
+          name: upload files to s3
+          command: aws s3 sync ./build s3://lgtm-generator-ui-<< parameters.stage >>-deployment/ --delete
       - slack/status
 
 
