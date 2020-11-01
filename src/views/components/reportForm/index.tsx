@@ -75,9 +75,8 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
         </RadioGroup>
         <TextField
           className={classes.textArea}
-          InputProps={{
-            className: classes.textAreaInput,
-          }}
+          inputProps={{ maxLength: 1000 }}
+          InputProps={{ className: classes.textAreaInput }}
           disabled={props.processing}
           fullWidth
           multiline
