@@ -39,7 +39,7 @@ export const MainPage: React.FC = () => {
 
   useEffect(() => {
     setTab(getTab);
-  }, [params.tab]);
+  }, [params.tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>

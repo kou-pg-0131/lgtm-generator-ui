@@ -82,7 +82,7 @@ export const LgtmsPanel: React.FC = () => {
 
   useEffect(() => {
     if (lgtmsState.lgtms.length === 0) loadLgtms();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>

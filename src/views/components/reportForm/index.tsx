@@ -58,7 +58,7 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
   const handleChangeType = (e: React.ChangeEvent<HTMLInputElement>) => props.onChangeType(e.currentTarget.value as ReportType);
 
   const isValid = () => {
-    if (props.type == undefined) return false;
+    if (props.type === undefined) return false;
     return true;
   };
 
@@ -66,7 +66,7 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
     <ModalCard open={props.open} onClose={() => !props.processing && props.onClose()}>
       <CardContent>
         <Box textAlign='center'>
-          <img className={classes.img} src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`}/>
+          <img className={classes.img} src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} alt='LGTM'/>
         </Box>
         <RadioGroup value={props.type} onChange={handleChangeType}>
           <FormControlLabel className={classes.radioText} label={<Typography className={classes.radioText}>法律違反（著作権侵害、プライバシー侵害、名誉棄損等）</Typography>} disabled={props.processing} value='illegal' control={<Radio value='illegal'/>}/>
