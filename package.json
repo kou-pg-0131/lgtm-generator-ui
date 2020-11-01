@@ -31,7 +31,8 @@
   "scripts": {
     "lint": "eslint './**/*.ts' './**/*.tsx'",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build:dev": "./bin/build dev && react-scripts build",
+    "build:prod": "./bin/build prod && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

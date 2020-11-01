@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+STAGE=$1
+
+case $STAGE in
+  dev)
+    SUB_DOMAIN=dev.
+    ;;
+  prod)
+    ;;
+  *)
+    echo "invalid stage!: ${STAGE}"
+    exit 1
+esac
+
+API_DOMAIN=${SUB_DOMAIN}api.lgtm-generator.kou-pg.com
+LGTMS_DOMAIN=${SUB_DOMAIN}lgtms.lgtm-generator.kou-pg.com
+
+echo "REACT_APP_API_ORIGIN=https://${API_DOMAIN}"    > .env.production.local
+echo "REACT_APP_LGTMS_ORIGIN=https://${LGTMS_DOMAIN}" >> .env.production.local
