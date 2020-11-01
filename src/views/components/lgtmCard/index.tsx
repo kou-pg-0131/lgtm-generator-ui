@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardActions, CardMedia } from '@material-ui/core';
+import { Card, CardActions, CardContent } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import { ButtonGroup } from './buttonGroup';
@@ -10,14 +10,22 @@ import { ApiClient } from '../../../infrastructures';
 const useStyles = makeStyles(() =>
   createStyles({
     card: {
-      border: '1px solid #eeeeee',
+      border: '1px solid #eee',
     },
     actions: {
       justifyContent: 'center',
     },
-    media: {
-      backgroundSize: 'contain',
-      height: 140,
+    content: {
+      height: 150,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '8px 8px 0',
+    },
+    img: {
+      border: '1px solid #eee',
+      maxHeight: 140,
+      maxWidth: '100%',
     },
     list: {
       padding: 0,
@@ -87,7 +95,9 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
         onReport={reportLgtm}
       />
       <Card className={classes.card}>
-        <CardMedia image={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} title='LGTM' className={classes.media}/>
+        <CardContent className={classes.content}>
+          <img src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} className={classes.img} alt="LGTM" />
+        </CardContent>
         <CardActions disableSpacing className={classes.actions}>
           <ButtonGroup
             lgtm={props.lgtm}
