@@ -112,10 +112,16 @@ workflows:
     jobs:
       - terraform_plan
 
+      - slack/approval-notification:
+          requires: [terraform_plan]
+      - approval_deploy:
+          type: approval
+          requires: [terraform_plan]
+
       - terraform_apply:
           name: terraform_apply_dev
           stage: dev
-          requires: [terraform_plan]
+          requires: [approval_deploy]
       - deploy:
           name: deploy_dev
           stage: dev
