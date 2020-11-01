@@ -29,3 +29,7 @@ yarn-error.log*
 *.tfstate.*
 terraform.log
 terraform.tfvars
+
+# circle-env
+.circle-env/circle-token
+.circle-env/.env
