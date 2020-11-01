@@ -69,9 +69,27 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
           <img className={classes.img} src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} alt='LGTM'/>
         </Box>
         <RadioGroup value={props.type} onChange={handleChangeType}>
-          <FormControlLabel className={classes.radioText} label={<Typography className={classes.radioText}>法律違反（著作権侵害、プライバシー侵害、名誉棄損等）</Typography>} disabled={props.processing} value='illegal' control={<Radio value='illegal'/>}/>
-          <FormControlLabel className={classes.radioText} label={<Typography className={classes.radioText}>不適切なコンテンツ</Typography>} disabled={props.processing} value='illegal' control={<Radio value='inappropriate'/>}/>
-          <FormControlLabel className={classes.radioText} label={<Typography className={classes.radioText}>その他</Typography>} disabled={props.processing} value='illegal' control={<Radio value='other'/>}/>
+          <FormControlLabel
+            className={classes.radioText}
+            value='illegal'
+            control={<Radio value='illegal'/>}
+            label={<Typography className={classes.radioText}>法律違反（著作権侵害、プライバシー侵害、名誉棄損等）</Typography>}
+            disabled={props.processing}
+          />
+          <FormControlLabel
+            className={classes.radioText}
+            value='inappropriate'
+            control={<Radio value='inappropriate'/>}
+            label={<Typography className={classes.radioText}>不適切なコンテンツ</Typography>}
+            disabled={props.processing}
+          />
+          <FormControlLabel
+            className={classes.radioText}
+            value='other'
+            control={<Radio value='other'/>}
+            label={<Typography className={classes.radioText}>その他</Typography>}
+            disabled={props.processing}
+          />
         </RadioGroup>
         <TextField
           className={classes.textArea}
