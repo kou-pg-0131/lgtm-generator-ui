@@ -128,16 +128,28 @@ workflows:
           name: terraform_apply_dev
           stage: dev
           requires: [approval_deploy]
+          filters:
+            branches:
+              ignore: main
       - deploy:
           name: deploy_dev
           stage: dev
           requires: [terraform_apply_dev]
+          filters:
+            branches:
+              ignore: main
 
       - terraform_apply:
           name: terraform_apply_prod
           stage: prod
           requires: [approval_deploy]
+          filters:
+            branches:
+              only: main
       - deploy:
           name: deploy_prod
           stage: prod
           requires: [terraform_apply_prod]
+          filters:
+            branches:
+              only: main
