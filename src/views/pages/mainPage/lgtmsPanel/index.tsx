@@ -93,6 +93,7 @@ export const LgtmsPanel: React.FC = () => {
       </FabButton>
       {imageFile && (
         <GenerateConfirm
+          imageName={imageFile.name}
           imageSrc={`data:${imageFile.type};base64,${imageFile.base64}`}
           open={!!imageFile}
           onGenerate={() => generateLgtm(imageFile)}

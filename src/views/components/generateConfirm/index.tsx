@@ -21,6 +21,7 @@ const useStyles = makeStyles(() =>
 );
 
 type Props = {
+  imageName: string;
   imageSrc: string;
   open: boolean;
   onGenerate: () => void;
@@ -35,7 +36,7 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
     <ModalCard open={props.open} onClose={props.onClose}>
       <CardContent className={classes.content}>
         <Typography className={classes.text}>この画像で LGTM 画像を生成しますか？</Typography>
-        <img className={classes.img} src={props.imageSrc}/>
+        <img className={classes.img} src={props.imageSrc} alt={props.imageName}/>
       </CardContent>
       <CardActions>
         <LoadableButton

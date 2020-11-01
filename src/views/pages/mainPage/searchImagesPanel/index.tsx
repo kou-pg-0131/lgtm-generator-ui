@@ -90,6 +90,7 @@ export const SearchImagesPanel: React.FC = () => {
     <React.Fragment>
       {image && (
         <GenerateConfirm
+          imageName={image.title}
           imageSrc={image.url}
           open={!!image}
           generating={generating}
