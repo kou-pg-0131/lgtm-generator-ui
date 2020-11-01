@@ -4,6 +4,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    modal: {
+      overflow: 'scroll',
+    },
     card: {
       left: '50%',
       outline: 0,
@@ -31,7 +34,7 @@ export const ModalCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   return (
-    <Modal open={props.open} onClose={props.onClose}>
+    <Modal className={classes.modal} open={props.open} onClose={props.onClose}>
       <Card className={classes.card}>
         {props.children}
       </Card>
