@@ -3,6 +3,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import * as uuid from 'uuid';
 import { States, lgtmsActions } from '../../../modules';
 import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard } from '../../../components';
 import { Lgtm } from '../../../../domain';
@@ -21,6 +22,7 @@ export const LgtmsPanel: React.FC = () => {
   const classes = useStyles();
 
   const inputFileRef = React.createRef<HTMLInputElement>();
+  const [inputFileKey, setInputFileKey] = useState<string>(uuid.v4());
 
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [uploading, setUploading] = useState<boolean>(false);
@@ -56,6 +58,7 @@ export const LgtmsPanel: React.FC = () => {
   };
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputFileKey(uuid.v4());
     if (!e.currentTarget.files || !e.currentTarget.files[0]) return;
 
     const file = e.currentTarget.files[0];
@@ -87,7 +90,7 @@ export const LgtmsPanel: React.FC = () => {
   return (
     <React.Fragment>
       <FabButton color='primary' onClick={() => inputFileRef.current?.click()} variant='extended'>
-        <input accept='image/*' onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
+        <input key={inputFileKey} accept='image/*' onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
         <AddCircle className={classes.addIcon}/>
         アップロード
       </FabButton>
