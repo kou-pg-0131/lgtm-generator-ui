@@ -36,13 +36,13 @@ export const CopyPopper: React.FC<Props> = (props: Props) => {
     <Paper>
       <List className={classes.list}>
         <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-          <CopyToClipBoard text={`![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})`}>
+          <CopyToClipBoard text={`[![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)`}>
             <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
           </CopyToClipBoard>
         </ListItem>
         <Divider/>
         <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-          <CopyToClipBoard text={`<img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/>`}>
+          <CopyToClipBoard text={`<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>`}>
             <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
           </CopyToClipBoard>
         </ListItem>
