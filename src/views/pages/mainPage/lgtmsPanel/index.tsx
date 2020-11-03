@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import { States, lgtmsActions } from '../../../modules';
 import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
 import { Lgtm } from '../../../../domain';
-import { ApiClientFactory, ImageFile, ImageFileLoader } from '../../../../infrastructures';
+import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
 
 const useStyles = makeStyles(() =>
@@ -100,7 +100,7 @@ export const LgtmsPanel: React.FC = () => {
       {imageFile && (
         <GenerateConfirm
           imageName={imageFile.name}
-          imageSrc={`data:${imageFile.type};base64,${imageFile.base64}`}
+          imageSrc={DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }).toString()}
           open={!!imageFile}
           onGenerate={() => generateLgtm(imageFile)}
           generating={uploading}
