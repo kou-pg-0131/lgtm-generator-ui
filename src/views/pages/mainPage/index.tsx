@@ -3,22 +3,22 @@ import * as qs from 'query-string';
 import { Box, Paper, Tab, Tabs } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FavoritesPanel } from './favoritesPanel';
 import { LgtmsPanel } from './lgtmsPanel';
 import { SearchImagesPanel } from './searchImagesPanel';
-import { FavoritesPanel } from './favoritesPanel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       paddingTop: 38,
     },
-    tabs: {
-      marginBottom: 24,
-    },
     tab: {
       [theme.breakpoints.down('xs')]: {
         fontSize: 12,
       },
+    },
+    tabs: {
+      marginBottom: 24,
     },
   }),
 );
@@ -45,16 +45,16 @@ export const MainPage: React.FC = () => {
     <React.Fragment>
       <Paper>
         <Tabs
+          className={classes.tabs}
           variant='fullWidth'
           value={tab}
           indicatorColor='primary'
           textColor='primary'
           onChange={handleChange}
-          className={classes.tabs}
         >
-          <Tab label='LGTM 画像' className={classes.tab} value='lgtms'/>
-          <Tab label='画像検索' className={classes.tab} value='search_images'/>
-          <Tab label='お気に入り' className={classes.tab} value='favorites'/>
+          <Tab className={classes.tab} label='LGTM 画像' value='lgtms'/>
+          <Tab className={classes.tab} label='画像検索' value='search_images'/>
+          <Tab className={classes.tab} label='お気に入り' value='favorites'/>
         </Tabs>
       </Paper>
 
