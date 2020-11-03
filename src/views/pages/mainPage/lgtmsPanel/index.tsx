@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import * as uuid from 'uuid';
 import { States, lgtmsActions } from '../../../modules';
-import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard } from '../../../components';
+import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
 import { Lgtm } from '../../../../domain';
 import { ApiClient, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
@@ -25,6 +25,7 @@ export const LgtmsPanel: React.FC = () => {
   const [inputFileKey, setInputFileKey] = useState<string>(uuid.v4());
 
   const [imageFile, setImageFile] = useState<ImageFile>();
+  const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
@@ -60,6 +61,7 @@ export const LgtmsPanel: React.FC = () => {
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputFileKey(uuid.v4());
     if (!e.currentTarget.files || !e.currentTarget.files[0]) return;
+    setImageFileLoading(true);
 
     const file = e.currentTarget.files[0];
     const imageFileLoader = new ImageFileLoader();
@@ -67,6 +69,8 @@ export const LgtmsPanel: React.FC = () => {
       setImageFile(imageFile);
     }).catch(() => {
       enqueueSnackbar(`対応していない画像形式です: ${file.name}`, { variant: 'warning' });
+    }).finally(() => {
+      setImageFileLoading(false);
     });
   };
 
@@ -89,6 +93,7 @@ export const LgtmsPanel: React.FC = () => {
 
   return (
     <React.Fragment>
+      <ModalLoading open={imageFileLoading} text='画像を読込中'/>
       <FabButton color='primary' onClick={() => inputFileRef.current?.click()} variant='extended'>
         <input key={inputFileKey} accept='image/*' onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
         <AddCircle className={classes.addIcon}/>

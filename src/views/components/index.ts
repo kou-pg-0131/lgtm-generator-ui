@@ -8,3 +8,4 @@ export * from './modalCard';
 export * from './reportForm';
 export * from './gridContainer';
 export * from './gridItem';
+export * from './modalLoading';
