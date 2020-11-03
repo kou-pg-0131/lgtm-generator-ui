@@ -17,7 +17,6 @@ export const FavoritesPanel: React.FC = () => {
         <GridItem key={lgtm.id}>
           <LgtmCard
             lgtm={lgtm}
-            favorited={!!lgtmsState.favorites.find(e => e.id === lgtm.id)}
             onFavorite={() => addFavorite(lgtm)}
             onUnfavorite={() => removeFavorite(lgtm)}
           />
