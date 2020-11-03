@@ -32,8 +32,13 @@ type Props = {
 export const GenerateConfirm: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
+  const handleClose = () => {
+    if (props.generating) return;
+    props.onClose();
+  };
+
   return (
-    <ModalCard open={props.open} onClose={props.onClose}>
+    <ModalCard open={props.open} onClose={handleClose}>
       <CardContent className={classes.content}>
         <Typography className={classes.text}>この画像で LGTM 画像を生成しますか？</Typography>
         <img className={classes.img} src={props.imageSrc} alt={props.imageName}/>
