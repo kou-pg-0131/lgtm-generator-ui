@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { lgtmsActions } from '../../../modules';
 import { Form, GenerateConfirm, GridContainer, GridItem } from '../../../components';
 import { Image, Lgtm } from '../../../../domain';
-import { ApiClient } from '../../../../infrastructures';
+import { ApiClientFactory } from '../../../../infrastructures';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -40,7 +40,7 @@ export const SearchImagesPanel: React.FC = () => {
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
-  const apiClient = new ApiClient();
+  const apiClient = new ApiClientFactory().create();
 
   const { enqueueSnackbar } = useSnackbar();
 

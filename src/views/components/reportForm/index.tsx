@@ -4,7 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import { LoadableButton, ModalCard } from '..';
 import { Lgtm, ReportType } from '../../../domain';
-import { ApiClient } from '../../../infrastructures';
+import { ApiClientFactory } from '../../../infrastructures';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +54,7 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
   const [reportText, setReportText] = useState<string>('');
   const [reportType, setReportType] = useState<ReportType>();
 
-  const apiClient = new ApiClient();
+  const apiClient = new ApiClientFactory().create();
 
   const { enqueueSnackbar } = useSnackbar();
 

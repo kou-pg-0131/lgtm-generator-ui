@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import { States, lgtmsActions } from '../../../modules';
 import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
 import { Lgtm } from '../../../../domain';
-import { ApiClient, ImageFile, ImageFileLoader } from '../../../../infrastructures';
+import { ApiClientFactory, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
 
 const useStyles = makeStyles(() =>
@@ -36,7 +36,7 @@ export const LgtmsPanel: React.FC = () => {
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
-  const apiClient = new ApiClient();
+  const apiClient = new ApiClientFactory().create();
 
   const { enqueueSnackbar } = useSnackbar();
 
