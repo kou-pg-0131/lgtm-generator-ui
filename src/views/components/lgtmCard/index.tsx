@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardActions, CardContent } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
-import { useSelector } from 'react-redux';
-import { States } from '../../modules';
+import { useDispatch, useSelector } from 'react-redux';
+import { lgtmsActions, States } from '../../modules';
 import { ButtonGroup } from './buttonGroup';
 import { ReportForm } from '..';
 import { Lgtm, ReportType } from '../../../domain';
@@ -48,8 +48,6 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   lgtm: Lgtm;
-  onFavorite: () => void;
-  onUnfavorite: () => void;
 };
 
 export const LgtmCard: React.FC<Props> = (props: Props) => {
@@ -60,6 +58,10 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   const [reportType, setReportType] = useState<ReportType>();
   const [reportText, setReportText] = useState<string>('');
   const lgtmsStates = useSelector((states: States) => states.lgtms);
+
+  const dispatch = useDispatch();
+  const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
+  const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
 
   const apiClient = new ApiClient();
 
@@ -104,8 +106,8 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
           <ButtonGroup
             lgtm={props.lgtm}
             favorited={!!lgtmsStates.favorites.find(e => e.id === props.lgtm.id)}
-            onFavorite={props.onFavorite}
-            onUnfavorite={props.onUnfavorite}
+            onFavorite={() => addFavorite(props.lgtm)}
+            onUnfavorite={() => removeFavorite(props.lgtm)}
             onReport={() => setOpenReportForm(true)}
           />
         </CardActions>

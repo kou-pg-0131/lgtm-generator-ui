@@ -34,8 +34,6 @@ export const LgtmsPanel: React.FC = () => {
   const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
   const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
-  const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
-  const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
   const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
   const apiClient = new ApiClient();
@@ -112,11 +110,7 @@ export const LgtmsPanel: React.FC = () => {
       <GridContainer>
         {lgtmsState.lgtms.map(lgtm => (
           <GridItem key={lgtm.id}>
-            <LgtmCard
-              lgtm={lgtm}
-              onFavorite={() => addFavorite(lgtm)}
-              onUnfavorite={() => removeFavorite(lgtm)}
-            />
+            <LgtmCard lgtm={lgtm}/>
           </GridItem>
         ))}
       </GridContainer>
