@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, CardActions, CardContent, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 import { LoadableButton, ModalCard } from '..';
 import { Lgtm, ReportType } from '../../../domain';
+import { ApiClient } from '../../../infrastructures';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,64 +43,85 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   open: boolean;
-  processing: boolean;
-  type?: ReportType;
-  text: string;
-  lgtm: Lgtm;
   onClose: () => void;
-  onReport: () => void;
-  onChangeType: (type: ReportType) => void;
-  onChangeText: (text: string) => void;
+  lgtm: Lgtm;
 };
 
 export const ReportForm: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
-  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => props.onChangeText(e.currentTarget.value);
-  const handleChangeType = (e: React.ChangeEvent<HTMLInputElement>) => props.onChangeType(e.currentTarget.value as ReportType);
+  const [reporting, setReporting] = useState<boolean>(false);
+  const [reportText, setReportText] = useState<string>('');
+  const [reportType, setReportType] = useState<ReportType>();
+
+  const apiClient = new ApiClient();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const close = () => {
+    if (reporting) return;
+    setReportType(undefined);
+    setReportText('');
+    props.onClose();
+  };
+
+  const reportLgtm = () => {
+    setReporting(true);
+    apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
+      enqueueSnackbar('送信しました');
+      close();
+    }).catch(() => {
+      enqueueSnackbar('送信失敗しました', { variant: 'error' });
+    }).finally(() => {
+      setReporting(false);
+    });
+  };
+
+  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setReportText(e.currentTarget.value);
+  const handleChangeType = (e: React.ChangeEvent<HTMLInputElement>) => setReportType(e.currentTarget.value as ReportType);
 
   const isValid = () => {
-    if (props.type === undefined) return false;
+    if (!reportType) return false;
     return true;
   };
 
   return (
-    <ModalCard open={props.open} onClose={() => !props.processing && props.onClose()}>
+    <ModalCard open={props.open} onClose={close}>
       <CardContent>
         <Box textAlign='center'>
           <img className={classes.img} src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} alt='LGTM'/>
         </Box>
-        <RadioGroup value={props.type} onChange={handleChangeType}>
+        <RadioGroup value={reportType} onChange={handleChangeType}>
           <FormControlLabel
             className={classes.radioText}
             value='illegal'
             control={<Radio value='illegal'/>}
             label={<Typography className={classes.radioText}>法律違反（著作権侵害、プライバシー侵害、名誉棄損等）</Typography>}
-            disabled={props.processing}
+            disabled={reporting}
           />
           <FormControlLabel
             className={classes.radioText}
             value='inappropriate'
             control={<Radio value='inappropriate'/>}
             label={<Typography className={classes.radioText}>不適切なコンテンツ</Typography>}
-            disabled={props.processing}
+            disabled={reporting}
           />
           <FormControlLabel
             className={classes.radioText}
             value='other'
             control={<Radio value='other'/>}
             label={<Typography className={classes.radioText}>その他</Typography>}
-            disabled={props.processing}
+            disabled={reporting}
           />
         </RadioGroup>
         <TextField
           className={classes.textArea}
           inputProps={{ maxLength: 1000 }}
           InputProps={{ className: classes.textAreaInput }}
-          disabled={props.processing}
+          disabled={reporting}
           fullWidth
           multiline
-          value={props.text}
+          value={reportText}
           placeholder='補足（任意）'
           variant='outlined'
           rows={5}
@@ -108,10 +131,10 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
       <CardActions>
         <LoadableButton
           fullWidth
-          loading={props.processing}
+          loading={reporting}
           color='primary'
           variant='contained'
-          onClick={props.onReport}
+          onClick={reportLgtm}
           disabled={!isValid()}
         >
           送信

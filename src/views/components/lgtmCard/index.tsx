@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardActions, CardContent } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
 import { ButtonGroup } from './buttonGroup';
 import { ReportForm } from '..';
-import { Lgtm, ReportType } from '../../../domain';
-import { ApiClient } from '../../../infrastructures';
+import { Lgtm } from '../../../domain';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -54,49 +52,18 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   const [openReportForm, setOpenReportForm] = useState<boolean>(false);
-  const [reporting, setReporting] = useState<boolean>(false);
-  const [reportType, setReportType] = useState<ReportType>();
-  const [reportText, setReportText] = useState<string>('');
   const lgtmsStates = useSelector((states: States) => states.lgtms);
 
   const dispatch = useDispatch();
   const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
   const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
 
-  const apiClient = new ApiClient();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const closeReportForm = () => {
-    setReportType(undefined);
-    setReportText('');
-    setOpenReportForm(false);
-  };
-
-  const reportLgtm = () => {
-    setReporting(true);
-    apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
-      enqueueSnackbar('送信しました');
-      closeReportForm();
-    }).catch(() => {
-      enqueueSnackbar('送信失敗しました', { variant: 'error' });
-    }).finally(() => {
-      setReporting(false);
-    });
-  };
-
   return (
     <React.Fragment>
       <ReportForm
         lgtm={props.lgtm}
-        text={reportText}
-        type={reportType}
-        onChangeType={setReportType}
-        onChangeText={setReportText}
         open={openReportForm}
-        onClose={closeReportForm}
-        processing={reporting}
-        onReport={reportLgtm}
+        onClose={() => setOpenReportForm(false)}
       />
       <Card className={classes.card}>
         <CardContent className={classes.content}>
