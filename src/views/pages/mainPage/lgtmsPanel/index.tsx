@@ -1,29 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { AddCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import * as uuid from 'uuid';
 import { States, lgtmsActions } from '../../../modules';
-import { FabButton, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
+import { GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
 import { Lgtm } from '../../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    addIcon: {
-      marginRight: 8,
-    },
-  }),
-);
+import { UploadButton } from './uploadButton';
 
 export const LgtmsPanel: React.FC = () => {
-  const classes = useStyles();
-
-  const inputFileRef = React.createRef<HTMLInputElement>();
-  const [inputFileKey, setInputFileKey] = useState<string>(uuid.v4());
-
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -56,12 +41,7 @@ export const LgtmsPanel: React.FC = () => {
     loadLgtms();
   };
 
-  const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputFileKey(uuid.v4());
-    if (!e.currentTarget.files || !e.currentTarget.files[0]) return;
-    setImageFileLoading(true);
-
-    const file = e.currentTarget.files[0];
+  const handleChangeFile = (file: File) => {
     const imageFileLoader = new ImageFileLoader();
     imageFileLoader.load(file).then(imageFile => {
       setImageFile(imageFile);
@@ -92,11 +72,7 @@ export const LgtmsPanel: React.FC = () => {
   return (
     <React.Fragment>
       <ModalLoading open={imageFileLoading} text='画像を読込中'/>
-      <FabButton color='primary' onClick={() => inputFileRef.current?.click()} variant='extended'>
-        <input key={inputFileKey} accept='image/*' onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
-        <AddCircle className={classes.addIcon}/>
-        アップロード
-      </FabButton>
+      <UploadButton onChange={handleChangeFile}/>
       {imageFile && (
         <GenerateConfirm
           imageName={imageFile.name}
