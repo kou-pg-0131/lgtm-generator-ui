@@ -6,8 +6,11 @@ import { FabButton } from '../../../../components';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    addIcon: {
+    icon: {
       marginRight: 8,
+    },
+    input: {
+      display: 'none',
     },
   }),
 );
@@ -22,6 +25,10 @@ export const UploadButton: React.FC<Props> = (props: Props) => {
   const inputFileRef = React.createRef<HTMLInputElement>();
   const [inputFileKey, setInputFileKey] = useState<string>(uuid.v4());
 
+  const handleClick = () => {
+    inputFileRef.current?.click();
+  };
+
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputFileKey(uuid.v4());
     const file = e.currentTarget.files && e.currentTarget.files[0];
@@ -30,9 +37,16 @@ export const UploadButton: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <FabButton color='primary' onClick={() => inputFileRef.current?.click()} variant='extended'>
-      <input key={inputFileKey} accept='image/*' onChange={handleChangeFile} type='file' ref={inputFileRef} style={{display:'none'}}/>
-      <AddCircle className={classes.addIcon}/>
+    <FabButton color='primary' onClick={handleClick} variant='extended'>
+      <input
+        accept='image/*'
+        className={classes.input}
+        key={inputFileKey}
+        onChange={handleChangeFile}
+        ref={inputFileRef}
+        type='file'
+      />
+      <AddCircle className={classes.icon}/>
       アップロード
     </FabButton>
   );
