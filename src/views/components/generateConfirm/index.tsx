@@ -63,7 +63,8 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
     });
   };
 
-  if (!props.imageSrc || !props.imageSrc.dataUrl && !props.imageSrc.url) return null;
+  if (!props.imageSrc) return null;
+  if (!props.imageSrc.dataUrl && !props.imageSrc.url) return null;
   const imageSrc = props.imageSrc.dataUrl?.toString() || props.imageSrc.url;
 
   return (
