@@ -29,7 +29,6 @@ export const SearchImagesPanel: React.FC = () => {
 
   const [images, setImages] = useState<Image[]>([]);
   const [image, setImage] = useState<Image>();
-  const [generating, setGenerating] = useState<boolean>(false);
   const [query, setQuery] = useState<string>('');
   const [searching, setSearching] = useState<boolean>(false);
 
@@ -73,31 +72,15 @@ export const SearchImagesPanel: React.FC = () => {
     setImage(image);
   };
 
-  const generateLgtm = (image: Image) => {
-    setGenerating(true);
-    apiClient.createLgtm({ url: image.url }).then(() => {
-      enqueueSnackbar('LGTM 画像を生成しました');
-      setImage(undefined);
-      reloadLgtms();
-    }).catch(() => {
-      enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'error' });
-    }).finally(() => {
-      setGenerating(false);
-    });
-  };
-
   return (
     <React.Fragment>
-      {image && (
-        <GenerateConfirm
-          imageName={image.title}
-          imageSrc={image.url}
-          open={!!image}
-          generating={generating}
-          onClose={() => setImage(undefined)}
-          onGenerate={() => generateLgtm(image)}
-        />
-      )}
+      <GenerateConfirm
+        imageSrc={{ url: image?.url }}
+        imageName={image?.title}
+        open={!!image}
+        onClose={() => setImage(undefined)}
+        onGenerate={reloadLgtms}
+      />
       <Form onSubmit={handleSearch}>
         <TextField
           type='search'

@@ -11,7 +11,6 @@ import { UploadButton } from './uploadButton';
 export const LgtmsPanel: React.FC = () => {
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
-  const [uploading, setUploading] = useState<boolean>(false);
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
   const dispatch = useDispatch();
@@ -42,6 +41,7 @@ export const LgtmsPanel: React.FC = () => {
   };
 
   const handleChangeFile = (file: File) => {
+    setImageFileLoading(true);
     const imageFileLoader = new ImageFileLoader();
     imageFileLoader.load(file).then(imageFile => {
       setImageFile(imageFile);
@@ -49,19 +49,6 @@ export const LgtmsPanel: React.FC = () => {
       enqueueSnackbar(`対応していない画像形式です: ${file.name}`, { variant: 'warning' });
     }).finally(() => {
       setImageFileLoading(false);
-    });
-  };
-
-  const generateLgtm = async (imageFile: ImageFile) => {
-    setUploading(true);
-    apiClient.createLgtm({ base64: imageFile.base64 }).then(() => {
-      enqueueSnackbar('LGTM 画像を生成しました');
-      setImageFile(undefined);
-    }).catch(() => {
-      enqueueSnackbar('LGTM 画像の生成に失敗しました', { variant: 'warning' });
-    }).finally(() => {
-      reloadLgtms();
-      setUploading(false);
     });
   };
 
@@ -75,11 +62,10 @@ export const LgtmsPanel: React.FC = () => {
       <UploadButton onChange={handleChangeFile}/>
       {imageFile && (
         <GenerateConfirm
+          imageSrc={{ dataUrl: DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }) }}
           imageName={imageFile.name}
-          imageSrc={DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }).toString()}
           open={!!imageFile}
-          onGenerate={() => generateLgtm(imageFile)}
-          generating={uploading}
+          onGenerate={reloadLgtms}
           onClose={() => setImageFile(undefined)}
         />
       )}
