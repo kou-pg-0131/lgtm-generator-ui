@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { CardActions, CardContent, Typography } from '@material-ui/core';
+import { CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { LoadableButton, ModalCard } from '..';
 import { ApiClientFactory, DataUrl } from '../../../infrastructures';
@@ -13,6 +13,9 @@ const useStyles = makeStyles(() =>
     },
     text: {
       marginBottom: 12,
+    },
+    precaution: {
+      fontSize: 12,
     },
     img: {
       border: '1px solid #ddd',
@@ -68,6 +71,7 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
       <CardContent className={classes.cardContent}>
         <Typography className={classes.text}>この画像で LGTM 画像を生成しますか？</Typography>
         <img className={classes.img} src={imageSrc} alt={props.imageName}/>
+        <Typography className={classes.precaution}>※ LGTM 画像を生成する前に <Link href='/precaution' target='_blank' rel='noopener noreferrer'>ご利用上の注意</Link> をお読みください</Typography>
       </CardContent>
       <CardActions>
         <LoadableButton
