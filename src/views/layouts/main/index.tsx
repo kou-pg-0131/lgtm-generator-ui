@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { MainPage, NotFoundPage, PrecautionPage } from '../../pages';
+import { ScrollToTop } from './scrollToTop';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -17,6 +18,7 @@ export const Main: React.FC = () => {
 
   return (
     <Container maxWidth='lg' className={classes.root}>
+      <ScrollToTop/>
       <Switch>
         <Route exact path='/' component={MainPage}/>
         <Route exact path='/precaution' component={PrecautionPage}/>
