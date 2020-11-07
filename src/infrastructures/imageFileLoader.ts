@@ -1,4 +1,5 @@
 import { loadImage, createCanvas } from 'canvas';
+import { FileTooLargeError } from '../domain';
 import { DataUrl } from '.';
 
 export type ImageFile = {
@@ -20,7 +21,7 @@ export class ImageFileLoader {
 
     if (file.type === 'image/gif') {
       if (file.size * 1.4 > 6300000) {
-        throw new Error('too large'); // TODO: show error message
+        throw new FileTooLargeError();
       }
 
       return {

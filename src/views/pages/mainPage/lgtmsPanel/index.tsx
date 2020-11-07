@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { States, lgtmsActions } from '../../../modules';
 import { GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../../components';
-import { Lgtm } from '../../../../domain';
+import { FileTooLargeError, Lgtm } from '../../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../../infrastructures';
 import { MoreButton } from './moreButton';
 import { UploadButton } from './uploadButton';
@@ -45,8 +45,15 @@ export const LgtmsPanel: React.FC = () => {
     const imageFileLoader = new ImageFileLoader();
     imageFileLoader.load(file).then(imageFile => {
       setImageFile(imageFile);
-    }).catch(() => {
-      enqueueSnackbar(`対応していない画像形式です: ${file.name}`, { variant: 'warning' });
+    }).catch((err) => {
+      switch (true) {
+        case err instanceof FileTooLargeError:
+          enqueueSnackbar(`ファイルサイズが大きすぎます: ${file.name}`, { variant: 'warning' });
+          break;
+        default:
+          enqueueSnackbar(`対応していない画像形式です: ${file.name}`, { variant: 'warning' });
+          break;
+      }
     }).finally(() => {
       setImageFileLoading(false);
     });
