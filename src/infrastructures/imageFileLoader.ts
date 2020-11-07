@@ -17,6 +17,19 @@ export class ImageFileLoader {
       reader.onerror = (err) => reject(err);
       reader.readAsDataURL(file.slice());
     });
+
+    if (file.type === 'image/gif') {
+      if (file.size * 1.4 > 6300000) {
+        throw new Error('too large'); // TODO: show error message
+      }
+
+      return {
+        name: file.name,
+        type: file.type,
+        base64: dataUrl.toString('base64'),
+      };
+    }
+
     const image = await loadImage(dataUrl.toString());
 
     const sideLength = 500;
