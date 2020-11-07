@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { CardActions, CardContent, Link, Typography } from '@material-ui/core';
+import { Button, CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { LoadableButton, ModalCard } from '..';
 import { ApiClientFactory, DataUrl } from '../../../infrastructures';
@@ -31,8 +31,6 @@ type Props = {
   open: boolean;
   onGenerate: () => void;
   onClose: () => void;
-
-  generating?: boolean;
 };
 
 export const GenerateConfirm: React.FC<Props> = (props: Props) => {
@@ -75,6 +73,13 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
         <Typography className={classes.precaution}>※ LGTM 画像を生成する前に <Link href='/precaution' target='_blank' rel='noopener noreferrer'>ご利用上の注意</Link> をお読みください</Typography>
       </CardContent>
       <CardActions>
+        <Button
+          fullWidth
+          variant='contained'
+          disabled={generating}
+          onClick={close}>
+            キャンセル
+          </Button>
         <LoadableButton
           fullWidth
           loading={generating}
@@ -82,7 +87,7 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
           variant='contained'
           onClick={handleClickGenerate}
         >
-          LGTM 画像を生成
+          生成
         </LoadableButton>
       </CardActions>
     </ModalCard>
