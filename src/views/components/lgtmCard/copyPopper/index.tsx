@@ -30,22 +30,28 @@ export const CopyPopper: React.FC<Props> = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleClickHTMLOrMarkdownCopy = () => enqueueSnackbar('クリップボードにコピーしました');
+  const handleClickHTMLOrMarkdownCopy = () => {
+    enqueueSnackbar('クリップボードにコピーしました');
+  };
+
+  const items = [
+    { text: 'Markdown', url: `[![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)` },
+    { text: 'HTML',     url: `<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>` },
+  ];
 
   return (
     <Paper>
       <List className={classes.list}>
-        <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-          <CopyToClipBoard text={`[![LGTM](${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)`}>
-            <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
-          </CopyToClipBoard>
-        </ListItem>
-        <Divider/>
-        <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
-          <CopyToClipBoard text={`<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>`}>
-            <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
-          </CopyToClipBoard>
-        </ListItem>
+        {items.map((item, i) => (
+          <React.Fragment key={item.text}>
+            <ListItem button onClick={handleClickHTMLOrMarkdownCopy} className={classes.listItem}>
+              <CopyToClipBoard text={item.url}>
+                <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>{item.text}</ListItemText>
+              </CopyToClipBoard>
+            </ListItem>
+            {items.length !== i + 1 && <Divider/>}
+          </React.Fragment>
+        ))}
       </List>
     </Paper>
   );
