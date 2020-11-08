@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
-import { Box, CircularProgress } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, ModalLoading } from '../../components';
+import { GenerateConfirm, ModalLoading } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
@@ -14,18 +13,9 @@ import { UploadButton } from './uploadButton';
 import { Tabs, TabValue } from './tabs';
 import { SearchImageForm } from './searchImageForm';
 import { LgtmList } from './lgtmList';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    images: {
-      marginTop: 24,
-    },
-  }),
-);
+import { ImageList } from './imageList';
 
 export const MainPage: React.FC = () => {
-  const classes = useStyles();
-
   const history = useHistory();
   const location = useLocation();
   const params = qs.parse(location.search);
@@ -108,7 +98,6 @@ export const MainPage: React.FC = () => {
     });
   };
 
-
   useEffect(() => {
     setTab(getTab);
   }, [params.tab]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -132,7 +121,6 @@ export const MainPage: React.FC = () => {
           onClose={() => setImageFile(undefined)}
         />
         <LgtmList lgtms={lgtmsState.lgtms}/>
-
         <MoreButton
           processing={lgtmsState.fetchingLgtms}
           visible={Boolean(lgtmsState.evaluatedId || lgtmsState.fetchingLgtms)}
@@ -154,19 +142,7 @@ export const MainPage: React.FC = () => {
           searching={searching}
           onSubmit={handleSearch}
         />
-        <Box className={classes.images}>
-          {searching ? (
-            <Box textAlign='center'><CircularProgress/></Box>
-          ) : (
-            <GridContainer>
-              {images.map((image, i) => (
-                <GridItem key={i}>
-                  <ClickableImageCard src={image.url} onClick={() => handleClickImage(image)}/>
-                </GridItem>
-              ))}
-            </GridContainer>
-          )}
-        </Box>
+        <ImageList images={images} searching={searching} onClick={handleClickImage}/>
       </Box>
 
       <Box hidden={tab !== 'favorites'}>
