@@ -6,18 +6,16 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading, SearchField } from '../../components';
+import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
 import { UploadButton } from './uploadButton';
 import { Tabs, TabValue } from './tabs';
+import { SearchImageForm } from './searchImageForm';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    input: {
-      backgroundColor: '#fff',
-    },
     images: {
       marginTop: 24,
     },
@@ -71,8 +69,8 @@ export const MainPage: React.FC = () => {
     history.replace({ search: `?tab=${value}` });
   };
 
-  const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.currentTarget.value);
+  const handleChangeQuery = (query: string) => {
+    setQuery(query);
   };
 
   const handleClickImage = (image: Image) => {
@@ -151,17 +149,12 @@ export const MainPage: React.FC = () => {
           onClose={() => setImage(undefined)}
           onGenerate={reloadLgtms}
         />
-        <Form onSubmit={handleSearch}>
-          <SearchField
-            fullWidth
-            className={classes.input}
-            disabled={searching}
-            variant='outlined'
-            value={query}
-            onChange={handleChangeQuery}
-            inputProps={{ maxLength: 255 }}
-          />
-        </Form>
+        <SearchImageForm
+          query={query}
+          onChange={handleChangeQuery}
+          searching={searching}
+          onSubmit={handleSearch}
+        />
         <Box className={classes.images}>
           {searching ? (
             <Box textAlign='center'><CircularProgress/></Box>
