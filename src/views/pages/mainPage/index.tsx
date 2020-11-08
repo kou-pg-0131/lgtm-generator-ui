@@ -3,8 +3,6 @@ import * as qs from 'query-string';
 import { Box } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { lgtmsActions, States } from '../../modules';
 import { GenerateConfirm, ModalLoading } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataStore, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
@@ -30,19 +28,14 @@ export const MainPage: React.FC = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<ImageFile>();
+  const [fetchingLgtms, setFetchingLgtms] = useState<boolean>(false);
+  const [lgtms, setLgtms] = useState<Lgtm[]>([]);
   const [favorites, setFavorites] = useState<Lgtm[]>(dataStore.getFavorites());
-  const lgtmsState = useSelector((states: States) => states.lgtms);
+  const [evaluatedId, setEvaluatedId] = useState<string>();
 
   const apiClient = new ApiClientFactory().create();
 
   const { enqueueSnackbar } = useSnackbar();
-
-  const dispatch = useDispatch();
-  const addLgtms = (lgtms: Lgtm[]) => dispatch(lgtmsActions.addLgtms(lgtms));
-  const clearLgtms = () => dispatch(lgtmsActions.clearLgtms());
-  const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
-  const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
-  const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
   const handleFavoriteLgtm = (lgtm: Lgtm) => {
     const after = [lgtm, ...favorites];
@@ -59,15 +52,15 @@ export const MainPage: React.FC = () => {
   const loadLgtms = (evaluatedId?: string) => {
     setFetchingLgtms(true);
     apiClient.getLgtms(evaluatedId).then(response => {
-      addLgtms(response.lgtms);
+      setLgtms(prev => [...prev, ...response.lgtms]);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
       setFetchingLgtms(false);
     });
   };
   const reloadLgtms = () => {
-    clearLgtms();
-    clearEvaluatedId();
+    setLgtms(() => []);
+    setEvaluatedId(undefined);
     loadLgtms();
   };
 
@@ -118,7 +111,7 @@ export const MainPage: React.FC = () => {
   }, [params.tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (lgtmsState.lgtms.length === 0) loadLgtms();
+    loadLgtms();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -136,14 +129,14 @@ export const MainPage: React.FC = () => {
           onClose={() => setImageFile(undefined)}
         />
         <LgtmList>
-          {lgtmsState.lgtms.map(lgtm => (
+          {lgtms.map(lgtm => (
             <LgtmListItem key={lgtm.id} lgtm={lgtm} favorited={!!favorites.find(e => e.id === lgtm.id)} onFavorite={() => handleFavoriteLgtm(lgtm)} onUnfavorite={() => handleUnfavoriteLgtm(lgtm)}/>
           ))}
         </LgtmList>
         <MoreButton
-          processing={lgtmsState.fetchingLgtms}
-          visible={Boolean(lgtmsState.evaluatedId || lgtmsState.fetchingLgtms)}
-          onClick={() => loadLgtms(lgtmsState.evaluatedId)}
+          processing={fetchingLgtms}
+          visible={Boolean(evaluatedId || fetchingLgtms)}
+          onClick={() => loadLgtms(evaluatedId)}
         />
       </Box>
 
