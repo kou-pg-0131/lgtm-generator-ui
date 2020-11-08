@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, CardActions, CardContent, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
+import { ReportTypeRadio } from './reportTypeRadio';
 import { LoadableButton, ModalCard } from '..';
 import { Lgtm, ReportType } from '../../../domain';
 import { ApiClientFactory } from '../../../infrastructures';
@@ -56,6 +57,12 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
 
   const apiClient = new ApiClientFactory().create();
 
+  const items: { text: string; value: ReportType; }[] = [
+    { text: '法律違反（著作権侵害、プライバシー侵害、名誉棄損等）', value: 'illegal' },
+    { text: '不適切なコンテンツ', value: 'inappropriate' },
+    { text: 'その他', value: 'other' },
+  ];
+
   const { enqueueSnackbar } = useSnackbar();
 
   const close = () => {
@@ -92,27 +99,9 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
           <img className={classes.img} src={`${process.env.REACT_APP_LGTMS_ORIGIN}/${props.lgtm.id}`} alt='LGTM'/>
         </Box>
         <RadioGroup value={reportType} onChange={handleChangeType}>
-          <FormControlLabel
-            className={classes.radioText}
-            value='illegal'
-            control={<Radio value='illegal'/>}
-            label={<Typography className={classes.radioText}>法律違反（著作権侵害、プライバシー侵害、名誉棄損等）</Typography>}
-            disabled={reporting}
-          />
-          <FormControlLabel
-            className={classes.radioText}
-            value='inappropriate'
-            control={<Radio value='inappropriate'/>}
-            label={<Typography className={classes.radioText}>不適切なコンテンツ</Typography>}
-            disabled={reporting}
-          />
-          <FormControlLabel
-            className={classes.radioText}
-            value='other'
-            control={<Radio value='other'/>}
-            label={<Typography className={classes.radioText}>その他</Typography>}
-            disabled={reporting}
-          />
+          {items.map(item => (
+            <ReportTypeRadio key={item.text} text={item.text} value={item.value} disabled={reporting}/>
+          ))}
         </RadioGroup>
         <TextField
           className={classes.textArea}
