@@ -5,7 +5,10 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FavoritesPanel } from './favoritesPanel';
 import { LgtmsPanel } from './lgtmsPanel';
+import { useSelector } from 'react-redux';
+import { States } from '../../modules';
 import { SearchImagesPanel } from './searchImagesPanel';
+import { GridContainer, GridItem, LgtmCard } from '../../components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,8 +35,9 @@ export const MainPage: React.FC = () => {
   const getTab = () => ['lgtms', 'search_images', 'favorites'].find((e) => e === params.tab) || 'lgtms';
 
   const [tab, setTab] = useState<string>(getTab());
+  const lgtmsState = useSelector((states: States) => states.lgtms);
 
-  const handleChange = (e: React.ChangeEvent<unknown>, value: string) => {
+  const handleChangeTab = (e: React.ChangeEvent<unknown>, value: string) => {
     history.replace({ search: `?tab=${value}` });
   };
 
@@ -50,7 +54,7 @@ export const MainPage: React.FC = () => {
           value={tab}
           indicatorColor='primary'
           textColor='primary'
-          onChange={handleChange}
+          onChange={handleChangeTab}
         >
           <Tab className={classes.tab} label='LGTM 画像' value='lgtms'/>
           <Tab className={classes.tab} label='画像検索' value='search_images'/>
@@ -60,7 +64,16 @@ export const MainPage: React.FC = () => {
 
       <Box hidden={tab !== 'lgtms'}><LgtmsPanel/></Box>
       <Box hidden={tab !== 'search_images'}><SearchImagesPanel/></Box>
-      <Box hidden={tab !== 'favorites'}><FavoritesPanel/></Box>
+
+      <Box hidden={tab !== 'favorites'}>
+        <GridContainer>
+          {lgtmsState.favorites.map(lgtm => (
+            <GridItem key={lgtm.id}>
+              <LgtmCard lgtm={lgtm}/>
+            </GridItem>
+          ))}
+        </GridContainer>
+      </Box>
     </React.Fragment>
   );
 };
