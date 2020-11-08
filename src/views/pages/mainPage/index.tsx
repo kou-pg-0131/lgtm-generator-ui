@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
-import { Box, Card, CardActionArea, CardMedia, CircularProgress, InputAdornment, TextField } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
+import { Box, CircularProgress } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading, SearchField } from '../../components';
+import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading, SearchField } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './lgtmsPanel/moreButton';
@@ -21,10 +20,6 @@ const useStyles = makeStyles(() =>
     },
     images: {
       marginTop: 24,
-    },
-    media: {
-      backgroundSize: 'contain',
-      height: 140,
     },
   }),
 );
@@ -132,15 +127,13 @@ export const MainPage: React.FC = () => {
       <Box hidden={tab !== 'lgtms'}>
         <ModalLoading open={imageFileLoading} text='画像を読込中'/>
         <UploadButton onChange={handleChangeFile}/>
-        {imageFile && (
-          <GenerateConfirm
-            imageSrc={{ dataUrl: DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }) }}
-            imageName={imageFile.name}
-            open={!!imageFile}
-            onGenerate={reloadLgtms}
-            onClose={() => setImageFile(undefined)}
-          />
-        )}
+        <GenerateConfirm
+          imageSrc={{ dataUrl: imageFile && DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }) }}
+          imageName={imageFile?.name}
+          open={!!imageFile}
+          onGenerate={reloadLgtms}
+          onClose={() => setImageFile(undefined)}
+        />
         <GridContainer>
           {lgtmsState.lgtms.map(lgtm => (
             <GridItem key={lgtm.id}>
@@ -182,11 +175,7 @@ export const MainPage: React.FC = () => {
             <GridContainer>
               {images.map((image, i) => (
                 <GridItem key={i}>
-                  <Card>
-                    <CardActionArea onClick={() => handleClickImage(image)}>
-                      <CardMedia className={classes.media} image={image.url}/>
-                    </CardActionArea>
-                  </Card>
+                  <ClickableImageCard src={image.url} onClick={() => handleClickImage(image)}/>
                 </GridItem>
               ))}
             </GridContainer>
