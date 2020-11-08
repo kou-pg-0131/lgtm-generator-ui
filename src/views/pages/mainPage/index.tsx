@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
-import { Box, Card, CardActionArea, CardMedia, CircularProgress, InputAdornment, Paper, Tab, Tabs, TextField } from '@material-ui/core';
+import { Box, Card, CardActionArea, CardMedia, CircularProgress, InputAdornment, TextField } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
@@ -12,20 +12,10 @@ import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './lgtmsPanel/moreButton';
 import { UploadButton } from './lgtmsPanel/uploadButton';
+import { Tabs, TabValue } from './tabs';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      paddingTop: 38,
-    },
-    tab: {
-      [theme.breakpoints.down('xs')]: {
-        fontSize: 12,
-      },
-    },
-    tabs: {
-      marginBottom: 24,
-    },
     input: {
       backgroundColor: '#fff',
     },
@@ -45,9 +35,9 @@ export const MainPage: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const params = qs.parse(location.search);
-  const getTab = () => ['lgtms', 'search_images', 'favorites'].find((e) => e === params.tab) || 'lgtms';
+  const getTab = () => (['lgtms', 'search_images', 'favorites'].find((e) => e === params.tab) || 'lgtms') as TabValue;
 
-  const [tab, setTab] = useState<string>(getTab());
+  const [tab, setTab] = useState<TabValue>(getTab());
   const [images, setImages] = useState<Image[]>([]);
   const [image, setImage] = useState<Image>();
   const [query, setQuery] = useState<string>('');
@@ -82,7 +72,7 @@ export const MainPage: React.FC = () => {
     loadLgtms();
   };
 
-  const handleChangeTab = (e: React.ChangeEvent<unknown>, value: string) => {
+  const handleChangeTab = (value: TabValue) => {
     history.replace({ search: `?tab=${value}` });
   };
 
@@ -134,20 +124,10 @@ export const MainPage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Paper>
-        <Tabs
-          className={classes.tabs}
-          variant='fullWidth'
-          value={tab}
-          indicatorColor='primary'
-          textColor='primary'
-          onChange={handleChangeTab}
-        >
-          <Tab className={classes.tab} label='LGTM 画像' value='lgtms'/>
-          <Tab className={classes.tab} label='画像検索' value='search_images'/>
-          <Tab className={classes.tab} label='お気に入り' value='favorites'/>
-        </Tabs>
-      </Paper>
+      <Tabs
+        value={tab}
+        onChange={handleChangeTab}
+      />
 
       <Box hidden={tab !== 'lgtms'}>
         <ModalLoading open={imageFileLoading} text='画像を読込中'/>
