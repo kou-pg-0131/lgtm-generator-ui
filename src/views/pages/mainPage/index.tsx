@@ -6,13 +6,14 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, LgtmCard, ModalLoading } from '../../components';
+import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, ModalLoading } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
 import { UploadButton } from './uploadButton';
 import { Tabs, TabValue } from './tabs';
 import { SearchImageForm } from './searchImageForm';
+import { LgtmList } from './lgtmList';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -130,9 +131,7 @@ export const MainPage: React.FC = () => {
           onGenerate={reloadLgtms}
           onClose={() => setImageFile(undefined)}
         />
-        <GridContainer>
-          {lgtmsState.lgtms.map(lgtm => <GridItem key={lgtm.id}><LgtmCard lgtm={lgtm}/></GridItem>)}
-        </GridContainer>
+        <LgtmList lgtms={lgtmsState.lgtms}/>
 
         <MoreButton
           processing={lgtmsState.fetchingLgtms}
@@ -171,13 +170,7 @@ export const MainPage: React.FC = () => {
       </Box>
 
       <Box hidden={tab !== 'favorites'}>
-        <GridContainer>
-          {lgtmsState.favorites.map(lgtm => (
-            <GridItem key={lgtm.id}>
-              <LgtmCard lgtm={lgtm}/>
-            </GridItem>
-          ))}
-        </GridContainer>
+        <LgtmList lgtms={lgtmsState.favorites}/>
       </Box>
     </React.Fragment>
   );
