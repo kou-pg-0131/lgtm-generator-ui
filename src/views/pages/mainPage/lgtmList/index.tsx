@@ -1,19 +1,14 @@
 import React from 'react';
-import { GridContainer, GridItem, LgtmCard } from '../../../components';
-import { Lgtm } from '../../../../domain';
+import { GridContainer } from '../../../components';
 
 type Props = {
-  lgtms: Lgtm[];
+  children: React.ReactNode;
 };
 
 export const LgtmList: React.FC<Props> = (props: Props) => {
   return (
     <GridContainer>
-      {props.lgtms.map(lgtm => (
-        <GridItem key={lgtm.id}>
-          <LgtmCard lgtm={lgtm}/>
-        </GridItem>
-      ))}
+      {props.children}
     </GridContainer>
   );
 };

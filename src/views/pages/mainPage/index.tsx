@@ -7,12 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
 import { GenerateConfirm, ModalLoading } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
-import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
+import { ApiClientFactory, DataStore, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
 import { UploadButton } from './uploadButton';
 import { Tabs, TabValue } from './tabs';
 import { SearchImageForm } from './searchImageForm';
 import { LgtmList } from './lgtmList';
+import { LgtmListItem } from './lgtmListItem';
 import { ImageList } from './imageList';
 
 export const MainPage: React.FC = () => {
@@ -20,6 +21,7 @@ export const MainPage: React.FC = () => {
   const location = useLocation();
   const params = qs.parse(location.search);
   const getTab = () => (['lgtms', 'search_images', 'favorites'].find((e) => e === params.tab) || 'lgtms') as TabValue;
+  const dataStore = new DataStore();
 
   const [tab, setTab] = useState<TabValue>(getTab());
   const [images, setImages] = useState<Image[]>([]);
@@ -28,6 +30,7 @@ export const MainPage: React.FC = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<ImageFile>();
+  const [favorites, setFavorites] = useState<Lgtm[]>(dataStore.getFavorites());
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
   const apiClient = new ApiClientFactory().create();
@@ -40,6 +43,18 @@ export const MainPage: React.FC = () => {
   const setEvaluatedId = (evaluatedId?: string) => dispatch(lgtmsActions.setEvaluatedId(evaluatedId));
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
+
+  const handleFavoriteLgtm = (lgtm: Lgtm) => {
+    const after = [lgtm, ...favorites];
+    dataStore.setFavorites(after);
+    setFavorites(after);
+  };
+
+  const handleUnfavoriteLgtm = (lgtm: Lgtm) => {
+    const after = favorites.filter(f => f.id !== lgtm.id);
+    dataStore.setFavorites(after);
+    setFavorites(after);
+  };
 
   const loadLgtms = (evaluatedId?: string) => {
     setFetchingLgtms(true);
@@ -120,7 +135,11 @@ export const MainPage: React.FC = () => {
           onGenerate={reloadLgtms}
           onClose={() => setImageFile(undefined)}
         />
-        <LgtmList lgtms={lgtmsState.lgtms}/>
+        <LgtmList>
+          {lgtmsState.lgtms.map(lgtm => (
+            <LgtmListItem key={lgtm.id} lgtm={lgtm} favorited={!!favorites.find(e => e.id === lgtm.id)} onFavorite={() => handleFavoriteLgtm(lgtm)} onUnfavorite={() => handleUnfavoriteLgtm(lgtm)}/>
+          ))}
+        </LgtmList>
         <MoreButton
           processing={lgtmsState.fetchingLgtms}
           visible={Boolean(lgtmsState.evaluatedId || lgtmsState.fetchingLgtms)}
@@ -146,7 +165,11 @@ export const MainPage: React.FC = () => {
       </Box>
 
       <Box hidden={tab !== 'favorites'}>
-        <LgtmList lgtms={lgtmsState.favorites}/>
+        <LgtmList>
+          {favorites.map(lgtm => (
+            <LgtmListItem key={lgtm.id} lgtm={lgtm} favorited={!!favorites.find(e => e.id === lgtm.id)} onFavorite={() => handleFavoriteLgtm(lgtm)} onUnfavorite={() => handleUnfavoriteLgtm(lgtm)}/>
+          ))}
+        </LgtmList>
       </Box>
     </React.Fragment>
   );

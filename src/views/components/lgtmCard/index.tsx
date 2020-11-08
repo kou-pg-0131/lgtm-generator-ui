@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardActions, CardContent } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { lgtmsActions, States } from '../../modules';
 import { ButtonGroup } from './buttonGroup';
 import { ReportForm } from '..';
 import { Lgtm } from '../../../domain';
@@ -46,17 +44,23 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   lgtm: Lgtm;
+  favorited: boolean;
+  onFavorite: () => void;
+  onUnfavorite: () => void;
 };
 
 export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   const [openReportForm, setOpenReportForm] = useState<boolean>(false);
-  const lgtmsStates = useSelector((states: States) => states.lgtms);
 
-  const dispatch = useDispatch();
-  const addFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.addFavorite(lgtm));
-  const removeFavorite = (lgtm: Lgtm) => dispatch(lgtmsActions.removeFavorite(lgtm));
+  const handleFavorite = () => {
+    props.onFavorite();
+  };
+
+  const handleUnfavorite = () => {
+    props.onUnfavorite();
+  };
 
   return (
     <React.Fragment>
@@ -72,9 +76,9 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
         <CardActions disableSpacing className={classes.actions}>
           <ButtonGroup
             lgtm={props.lgtm}
-            favorited={!!lgtmsStates.favorites.find(e => e.id === props.lgtm.id)}
-            onFavorite={() => addFavorite(props.lgtm)}
-            onUnfavorite={() => removeFavorite(props.lgtm)}
+            favorited={props.favorited}
+            onFavorite={handleFavorite}
+            onUnfavorite={handleUnfavorite}
             onReport={() => setOpenReportForm(true)}
           />
         </CardActions>
