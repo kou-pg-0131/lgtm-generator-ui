@@ -7,7 +7,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading } from '../../components';
+import { GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading, SearchField } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './lgtmsPanel/moreButton';
@@ -165,17 +165,14 @@ export const MainPage: React.FC = () => {
           onGenerate={reloadLgtms}
         />
         <Form onSubmit={handleSearch}>
-          <TextField
-            type='search'
+          <SearchField
+            fullWidth
             className={classes.input}
             disabled={searching}
-            fullWidth
             variant='outlined'
             value={query}
             onChange={handleChangeQuery}
-            placeholder='キーワード'
             inputProps={{ maxLength: 255 }}
-            InputProps={{ startAdornment: <InputAdornment position='start'><Search/></InputAdornment> }}
           />
         </Form>
         <Box className={classes.images}>
