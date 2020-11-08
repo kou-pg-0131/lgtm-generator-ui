@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { AddCircle } from '@material-ui/icons';
 import * as uuid from 'uuid';
-import { FabButton } from '../../../../components';
+import { FabButton } from '../../../components';
 
 const useStyles = makeStyles(() =>
   createStyles({

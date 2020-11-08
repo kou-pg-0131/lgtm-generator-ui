@@ -9,8 +9,8 @@ import { lgtmsActions, States } from '../../modules';
 import { ClickableImageCard, GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading, SearchField } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
-import { MoreButton } from './lgtmsPanel/moreButton';
-import { UploadButton } from './lgtmsPanel/uploadButton';
+import { MoreButton } from './moreButton';
+import { UploadButton } from './uploadButton';
 import { Tabs, TabValue } from './tabs';
 
 const useStyles = makeStyles(() =>
@@ -89,6 +89,7 @@ export const MainPage: React.FC = () => {
       setSearching(false);
     });
   };
+
   const handleChangeFile = (file: File) => {
     setImageFileLoading(true);
     const imageFileLoader = new ImageFileLoader();
@@ -119,10 +120,7 @@ export const MainPage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Tabs
-        value={tab}
-        onChange={handleChangeTab}
-      />
+      <Tabs value={tab} onChange={handleChangeTab}/>
 
       <Box hidden={tab !== 'lgtms'}>
         <ModalLoading open={imageFileLoading} text='画像を読込中'/>
@@ -135,11 +133,7 @@ export const MainPage: React.FC = () => {
           onClose={() => setImageFile(undefined)}
         />
         <GridContainer>
-          {lgtmsState.lgtms.map(lgtm => (
-            <GridItem key={lgtm.id}>
-              <LgtmCard lgtm={lgtm}/>
-            </GridItem>
-          ))}
+          {lgtmsState.lgtms.map(lgtm => <GridItem key={lgtm.id}><LgtmCard lgtm={lgtm}/></GridItem>)}
         </GridContainer>
 
         <MoreButton
