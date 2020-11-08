@@ -5,12 +5,13 @@ import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import { LgtmsPanel } from './lgtmsPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { lgtmsActions, States } from '../../modules';
-import { GenerateConfirm, GridContainer, GridItem, Form, LgtmCard } from '../../components';
-import { Image, Lgtm } from '../../../domain';
-import { ApiClientFactory } from '../../../infrastructures';
+import { GenerateConfirm, GridContainer, GridItem, Form, LgtmCard, ModalLoading } from '../../components';
+import { Image, Lgtm, FileTooLargeError } from '../../../domain';
+import { ApiClientFactory, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
+import { MoreButton } from './lgtmsPanel/moreButton';
+import { UploadButton } from './lgtmsPanel/uploadButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +52,8 @@ export const MainPage: React.FC = () => {
   const [image, setImage] = useState<Image>();
   const [query, setQuery] = useState<string>('');
   const [searching, setSearching] = useState<boolean>(false);
+  const [imageFileLoading, setImageFileLoading] = useState<boolean>(false);
+  const [imageFile, setImageFile] = useState<ImageFile>();
   const lgtmsState = useSelector((states: States) => states.lgtms);
 
   const apiClient = new ApiClientFactory().create();
@@ -64,16 +67,19 @@ export const MainPage: React.FC = () => {
   const clearEvaluatedId = () => dispatch(lgtmsActions.clearEvaluatedId());
   const setFetchingLgtms = (fetching: boolean) => dispatch(lgtmsActions.setFetchingLgtms(fetching));
 
-  const reloadLgtms = () => {
+  const loadLgtms = (evaluatedId?: string) => {
     setFetchingLgtms(true);
-    clearLgtms();
-    clearEvaluatedId();
-    apiClient.getLgtms().then(response => {
+    apiClient.getLgtms(evaluatedId).then(response => {
       addLgtms(response.lgtms);
       setEvaluatedId(response.evaluated_id);
     }).finally(() => {
       setFetchingLgtms(false);
     });
+  };
+  const reloadLgtms = () => {
+    clearLgtms();
+    clearEvaluatedId();
+    loadLgtms();
   };
 
   const handleChangeTab = (e: React.ChangeEvent<unknown>, value: string) => {
@@ -98,10 +104,33 @@ export const MainPage: React.FC = () => {
       setSearching(false);
     });
   };
+  const handleChangeFile = (file: File) => {
+    setImageFileLoading(true);
+    const imageFileLoader = new ImageFileLoader();
+    imageFileLoader.load(file).then(imageFile => {
+      setImageFile(imageFile);
+    }).catch((err) => {
+      switch (true) {
+        case err instanceof FileTooLargeError:
+          enqueueSnackbar(`ファイルサイズが大きすぎます: ${file.name}`, { variant: 'warning' });
+          break;
+        default:
+          enqueueSnackbar(`対応していない画像形式です: ${file.name}`, { variant: 'warning' });
+          break;
+      }
+    }).finally(() => {
+      setImageFileLoading(false);
+    });
+  };
+
 
   useEffect(() => {
     setTab(getTab);
   }, [params.tab]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (lgtmsState.lgtms.length === 0) loadLgtms();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>
@@ -120,7 +149,32 @@ export const MainPage: React.FC = () => {
         </Tabs>
       </Paper>
 
-      <Box hidden={tab !== 'lgtms'}><LgtmsPanel/></Box>
+      <Box hidden={tab !== 'lgtms'}>
+        <ModalLoading open={imageFileLoading} text='画像を読込中'/>
+        <UploadButton onChange={handleChangeFile}/>
+        {imageFile && (
+          <GenerateConfirm
+            imageSrc={{ dataUrl: DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }) }}
+            imageName={imageFile.name}
+            open={!!imageFile}
+            onGenerate={reloadLgtms}
+            onClose={() => setImageFile(undefined)}
+          />
+        )}
+        <GridContainer>
+          {lgtmsState.lgtms.map(lgtm => (
+            <GridItem key={lgtm.id}>
+              <LgtmCard lgtm={lgtm}/>
+            </GridItem>
+          ))}
+        </GridContainer>
+
+        <MoreButton
+          processing={lgtmsState.fetchingLgtms}
+          visible={Boolean(lgtmsState.evaluatedId || lgtmsState.fetchingLgtms)}
+          onClick={() => loadLgtms(lgtmsState.evaluatedId)}
+        />
+      </Box>
 
       <Box hidden={tab !== 'search_images'}>
         <GenerateConfirm
