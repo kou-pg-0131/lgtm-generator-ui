@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
 import { GenerateConfirm, ModalLoading } from '../../components';
@@ -23,6 +23,7 @@ export const MainPage: React.FC = () => {
 
   const [tab, setTab] = useState<TabValue>(getTab());
   const [images, setImages] = useState<Image[]>([]);
+  const [imagesNotFound, setImagesNotFound] = useState<boolean>(false);
   const [image, setImage] = useState<Image>();
   const [query, setQuery] = useState<string>('');
   const [searching, setSearching] = useState<boolean>(false);
@@ -78,8 +79,10 @@ export const MainPage: React.FC = () => {
 
   const handleSearch = () => {
     setSearching(true);
+    setImagesNotFound(false);
     apiClient.searchImages({ q: query }).then(images => {
       setImages(images);
+      setImagesNotFound(images.length === 0);
     }).catch(() => {
       enqueueSnackbar('画像検索に失敗しました', { variant: 'error' });
     }).finally(() => {
@@ -154,6 +157,7 @@ export const MainPage: React.FC = () => {
           searching={searching}
           onSubmit={handleSearch}
         />
+        {imagesNotFound && <Box mt={2} textAlign='center'><Typography>画像が見つかりませんでした</Typography></Box>}
         <ImageList images={images} searching={searching} onClick={handleClickImage}/>
       </Box>
 
