@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, CardActions, CardContent, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
+import { Box, CardActions, CardContent, RadioGroup, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import { ReportTypeRadio } from './reportTypeRadio';
