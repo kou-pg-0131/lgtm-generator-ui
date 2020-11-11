@@ -7,7 +7,7 @@ type Props = {
 
 export const GridItem: React.FC<Props> = (props: Props) => {
   return (
-    <Grid item xs={6} sm={3} md={2}>
+    <Grid item xs={6} sm={4} md={3}>
       {props.children}
     </Grid>
   );
