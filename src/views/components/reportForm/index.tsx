@@ -73,8 +73,10 @@ export const ReportForm: React.FC<Props> = (props: Props) => {
   };
 
   const reportLgtm = () => {
+    if (!reportType) return;
+
     setReporting(true);
-    apiClient.createReport({ type: 'other', text: 'hello', lgtm: props.lgtm }).then(() => {
+    apiClient.createReport({ type: reportType, text: reportText, lgtm: props.lgtm }).then(() => {
       enqueueSnackbar('送信しました');
       close();
     }).catch(() => {
