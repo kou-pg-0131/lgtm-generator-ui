@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'query-string';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
-import { GenerateConfirm, ModalLoading } from '../../components';
+import { GenerateConfirm, ModalLoading, Message } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataStore, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
@@ -78,6 +78,8 @@ export const MainPage: React.FC = () => {
   };
 
   const handleSearch = () => {
+    if (query.length === 0) return;
+
     setSearching(true);
     setImagesNotFound(false);
     apiClient.searchImages({ q: query }).then(images => {
@@ -157,7 +159,7 @@ export const MainPage: React.FC = () => {
           searching={searching}
           onSubmit={handleSearch}
         />
-        {imagesNotFound && <Box mt={2} textAlign='center'><Typography>画像が見つかりませんでした</Typography></Box>}
+        {imagesNotFound && <Message>画像が見つかりませんでした</Message>}
         <ImageList images={images} searching={searching} onClick={handleClickImage}/>
       </Box>
 

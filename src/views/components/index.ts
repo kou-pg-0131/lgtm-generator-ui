@@ -11,3 +11,4 @@ export * from './gridItem';
 export * from './modalLoading';
 export * from './searchField';
 export * from './clickableImageCard';
+export * from './message';
