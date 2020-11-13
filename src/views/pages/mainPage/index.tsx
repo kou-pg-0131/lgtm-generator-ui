@@ -3,7 +3,7 @@ import * as qs from 'query-string';
 import { Box } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useHistory, useLocation } from 'react-router-dom';
-import { GenerateConfirm, ModalLoading, Message } from '../../components';
+import { GenerateConfirm, ModalLoading, Message, Title } from '../../components';
 import { Image, Lgtm, FileTooLargeError } from '../../../domain';
 import { ApiClientFactory, DataStore, DataUrl, ImageFile, ImageFileLoader } from '../../../infrastructures';
 import { MoreButton } from './moreButton';
@@ -121,6 +121,7 @@ export const MainPage: React.FC = () => {
 
   return (
     <React.Fragment>
+      <Title/>
       <Tabs value={tab} onChange={handleChangeTab}/>
 
       <Box hidden={tab !== 'lgtms'}>

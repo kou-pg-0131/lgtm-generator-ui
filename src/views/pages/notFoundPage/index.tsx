@@ -1,6 +1,8 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Title } from '../../components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,6 +19,9 @@ export const NotFoundPage: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <Typography className={classes.text} align='center'>お探しのページは見つかりませんでした</Typography>
+    <React.Fragment>
+      <Title value='お探しのページは見つかりませんでした'/>
+      <Typography className={classes.text} align='center'>お探しのページは見つかりませんでした</Typography>
+    </React.Fragment>
   );
 };

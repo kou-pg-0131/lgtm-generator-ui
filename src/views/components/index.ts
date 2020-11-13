@@ -12,3 +12,4 @@ export * from './modalLoading';
 export * from './searchField';
 export * from './clickableImageCard';
 export * from './message';
+export * from './title';
