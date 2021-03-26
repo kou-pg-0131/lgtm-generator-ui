@@ -1,4 +1,4 @@
-resource aws_cloudfront_distribution deployment {
+resource "aws_cloudfront_distribution" "deployment" {
   enabled             = true
   default_root_object = "index.html"
 
@@ -62,4 +62,4 @@ resource aws_cloudfront_distribution deployment {
   }
 }
 
-resource aws_cloudfront_origin_access_identity deployment {}
+resource "aws_cloudfront_origin_access_identity" "deployment" {}

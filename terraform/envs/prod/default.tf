@@ -1,9 +1,9 @@
-provider aws {
+provider "aws" {
   profile = "default"
   region  = "us-east-1"
 }
 
-module main {
+module "main" {
   source = "../.."
   stage  = var.stage
 }
