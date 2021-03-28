@@ -4,6 +4,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { orange, pink, red } from '@material-ui/core/colors';
 import CopyToClipBoard from 'react-copy-to-clipboard';
+import { useSnackbar } from 'notistack';
 import { useFavorites } from '../contexts';
 import { Lgtm } from '../domain';
 import { ButtonWithPopper } from '.';
@@ -82,6 +83,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   const { favorites, add, remove } = useFavorites();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleClickFavorite = () => {
     add(props.lgtm);
@@ -89,6 +91,10 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
 
   const handleClickUnfavorite = () => {
     remove(props.lgtm.id);
+  };
+
+  const handleClickCopy = () => {
+    enqueueSnackbar('クリップボードにコピーしました');
   };
 
   return (
@@ -107,13 +113,13 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
             popperContent={(
               <Paper>
                 <List className={classes.list}>
-                  <ListItem className={classes.listItem} button>
+                  <ListItem className={classes.listItem} button onClick={handleClickCopy}>
                     <CopyToClipBoard text={`[![LGTM](${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)`}>
                       <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
                     </CopyToClipBoard>
                   </ListItem>
                   <Divider/>
-                  <ListItem className={classes.listItem} button>
+                  <ListItem className={classes.listItem} button onClick={handleClickCopy}>
                     <CopyToClipBoard text={`<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>`}>
                       <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
                     </CopyToClipBoard>
