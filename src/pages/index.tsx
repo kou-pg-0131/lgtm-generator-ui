@@ -1,8 +1,11 @@
 import React from 'react';
+import { Layout } from '../layout';
 
 const Home: React.FC = () => {
   return (
-    <div>hello next.js</div>
+    <Layout>
+      <div>hello next.js</div>
+    </Layout>
   );
 };
 
