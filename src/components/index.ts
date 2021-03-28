@@ -6,3 +6,4 @@ export * from './tabs';
 export * from './lgtmsPanel';
 export * from './searchImagesPanel';
 export * from './favoritesPanel';
+export * from './uploadButton';
