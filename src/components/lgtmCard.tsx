@@ -2,6 +2,7 @@ import React from 'react';
 import { Divider, Paper, Card, CardActions, CardContent, Button, ButtonGroup, List, ListItem, ListItemText } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
+import { orange, pink, red } from '@material-ui/core/colors';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import { useFavorites } from '../contexts';
 import { Lgtm } from '../domain';
@@ -41,6 +42,35 @@ const useStyles = makeStyles(() =>
       fontSize: 12,
       textAlign: 'center',
     },
+    copyButton: {
+      borderRight: 'none !important',
+    },
+    favoriteButton: {
+      backgroundColor: 'white',
+      borderRight: 'none !important',
+      '&:hover': {
+        backgroundColor: pink[50],
+      },
+    },
+    favoriteIcon: {
+      color: red[500],
+    },
+    unfavoriteButton: {
+      backgroundColor: pink[100],
+      borderRight: 'none !important',
+      '&:hover': {
+        backgroundColor: pink[200],
+      },
+    },
+    unfavoriteIcon: {
+      color: red[500],
+    },
+    reportButton: {
+      backgroundColor: orange[500],
+      '&:hover': {
+        backgroundColor: orange[700],
+      },
+    },
   }),
 );
 
@@ -73,6 +103,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
       <CardActions className={classes.actions} disableSpacing>
         <ButtonGroup className={classes.buttonGroup} variant='contained' color='primary'>
           <ButtonWithPopper
+            className={classes.copyButton}
             popperContent={(
               <Paper>
                 <List className={classes.list}>
@@ -94,11 +125,25 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
             <FileCopyOutlined fontSize='small'/>
           </ButtonWithPopper>
           {favorites.some(favorite => favorite.id === props.lgtm.id) ? (
-            <Button onClick={handleClickUnfavorite}><Favorite fontSize='small'/></Button>
+            <Button
+              className={classes.unfavoriteButton}
+              onClick={handleClickUnfavorite}
+            >
+              <Favorite className={classes.unfavoriteIcon} fontSize='small'/>
+            </Button>
           ) : (
-            <Button onClick={handleClickFavorite}><FavoriteBorder fontSize='small'/></Button>
+            <Button
+              className={classes.favoriteButton}
+              onClick={handleClickFavorite}
+            >
+              <FavoriteBorder className={classes.favoriteIcon} fontSize='small'/>
+            </Button>
           )}
-          <Button><FlagOutlined fontSize='small'/></Button>
+          <Button
+            className={classes.reportButton}
+          >
+            <FlagOutlined fontSize='small'/>
+          </Button>
         </ButtonGroup>
       </CardActions>
     </Card>
