@@ -3,6 +3,7 @@ import { Divider, Paper, Card, CardActions, CardContent, Button, ButtonGroup, Li
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import CopyToClipBoard from 'react-copy-to-clipboard';
+import { useFavorites } from '../contexts';
 import { Lgtm } from '../domain';
 import { ButtonWithPopper } from '.';
 
@@ -50,6 +51,16 @@ type Props = {
 export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
+  const { favorites, add, remove } = useFavorites();
+
+  const handleClickFavorite = () => {
+    add(props.lgtm);
+  };
+
+  const handleClickUnfavorite = () => {
+    remove(props.lgtm.id);
+  };
+
   return (
     <Card>
       <CardContent className={classes.content}>
@@ -82,7 +93,11 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
           >
             <FileCopyOutlined fontSize='small'/>
           </ButtonWithPopper>
-          <Button><FavoriteBorder fontSize='small'/></Button>
+          {favorites.some(favorite => favorite.id === props.lgtm.id) ? (
+            <Button onClick={handleClickUnfavorite}><Favorite fontSize='small'/></Button>
+          ) : (
+            <Button onClick={handleClickFavorite}><FavoriteBorder fontSize='small'/></Button>
+          )}
           <Button><FlagOutlined fontSize='small'/></Button>
         </ButtonGroup>
       </CardActions>
