@@ -21,6 +21,7 @@
     "uuid": "^8.3.1"
   },
   "scripts": {
+    "dev": "next dev",
     "lint": "eslint './**/*.ts' './**/*.tsx'",
     "start": "react-scripts start",
     "build:dev": "./bin/build dev && react-scripts build",
