@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import { CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { LgtmsProvider } from '../contexts';
 import '../styles/global.scss';
 
 export const theme = createMuiTheme({
@@ -17,7 +18,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline/>
-      <Component {...pageProps}/>
+      <LgtmsProvider>
+        <Component {...pageProps}/>
+      </LgtmsProvider>
     </ThemeProvider>
   );
 };
