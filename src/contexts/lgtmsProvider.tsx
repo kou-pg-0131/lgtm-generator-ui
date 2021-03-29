@@ -5,6 +5,8 @@ import { ApiClient } from '../infrastructures';
 type Context = {
   lgtms: Lgtm[];
   loading: boolean;
+  reload?: () => void;
+  create?: (params: { base64?: string, url?: string }) => Promise<void>;
   loadMore?: () => void;
   loadable: boolean;
 };
@@ -26,7 +28,25 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
 
   const apiClient = new ApiClient();
 
-  const load = () => {
+  const create = async (params: { base64?: string, url?: string }) => {
+    await apiClient.createLgtm(params);
+  };
+
+  const clear = () => {
+    setEvaluatedId(undefined);
+    setLgtms([]);
+  };
+
+  const reload = () => {
+    clear();
+    load();
+  };
+
+  const loadMore = () => {
+    load(evaluatedId);
+  };
+
+  const load = (evaluatedId?: string) => {
     setLoading(true);
     apiClient.getLgtms(evaluatedId).then(resp => {
       setEvaluatedId(resp.evaluated_id);
@@ -40,7 +60,15 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
   }, []);
 
   return (
-    <LgtmsContext.Provider value={{ lgtms, loading, loadable: !!evaluatedId, loadMore: load }}>
+    <LgtmsContext.Provider value={{
+      lgtms,
+        loading,
+        loadable: !!evaluatedId,
+        loadMore,
+        reload,
+        create,
+      }}
+    >
       {props.children}
     </LgtmsContext.Provider>
   );

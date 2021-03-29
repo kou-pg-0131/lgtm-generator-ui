@@ -19,12 +19,19 @@ const useStyles = makeStyles((theme: Theme) =>
 export const LgtmsPanel: React.FC = () => {
   const classes = useStyles();
 
-  const { lgtms, loading, loadable, loadMore } = useLgtms();
+  const { lgtms, loading, loadable, loadMore, create, reload } = useLgtms();
   const { enqueueSnackbar } = useSnackbar();
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [loadingImageFile, setLoadingImageFile] = useState<boolean>(false);
 
   const clearImageFile = () => setImageFile(undefined);
+
+  const handleGenerate = () => {
+    create({ base64: imageFile?.base64 }).then(() => {
+      setImageFile(undefined);
+      reload();
+    });
+  };
 
   const handleChangeFile = (file: File) => {
     setLoadingImageFile(true);
@@ -66,6 +73,7 @@ export const LgtmsPanel: React.FC = () => {
       <UploadButton onChange={handleChangeFile}/>
       <GenerateConfirm
         open={!!imageFile}
+        onGenerate={handleGenerate}
         onClose={clearImageFile}
         imgSrc={imageFile && DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }).toString('dataurl')}
       />

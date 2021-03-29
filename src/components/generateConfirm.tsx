@@ -25,6 +25,7 @@ const useStyles = makeStyles(() =>
 
 type Props = {
   open: boolean;
+  onGenerate: () => void;
   onClose: () => void;
   imgSrc?: string;
 };
@@ -51,6 +52,7 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
           fullWidth
           color='primary'
           variant='contained'
+          onClick={props.onGenerate}
         >
           生成
         </Button>
