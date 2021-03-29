@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import { useLgtms } from '../contexts';
 import { LgtmList, LgtmListItem, UploadButton, GenerateConfirm, ModalLoading, Loading } from '.';
 import { ImageFile, ImageFileLoader, DataUrl } from '../infrastructures';
 import { FileTooLargeError } from '../domain';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    more: {
+      marginTop: theme.spacing(2),
+      textAlign: 'center',
+    },
+  }),
+);
+
 export const LgtmsPanel: React.FC = () => {
-  const { lgtms, loading } = useLgtms();
+  const classes = useStyles();
+
+  const { lgtms, loading, loadable, loadMore } = useLgtms();
   const { enqueueSnackbar } = useSnackbar();
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [loadingImageFile, setLoadingImageFile] = useState<boolean>(false);
@@ -40,7 +52,15 @@ export const LgtmsPanel: React.FC = () => {
           <LgtmListItem key={lgtm.id} lgtm={lgtm}/>
         ))}
       </LgtmList>
-      {loading && <Loading/>}
+      {(loading || loadable) && (
+        <Box className={classes.more}>
+          {loading ? (
+            <Loading/>
+          ) : (
+            <Button variant='contained' color='primary' onClick={loadMore}>MORE</Button>
+          )}
+        </Box>
+      )}
 
       <ModalLoading open={loadingImageFile} text='画像を読込中'/>
       <UploadButton onChange={handleChangeFile}/>
