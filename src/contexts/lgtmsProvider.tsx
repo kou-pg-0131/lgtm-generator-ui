@@ -26,7 +26,7 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
 
   const apiClient = new ApiClient();
 
-  const loadMore = () => {
+  const load = () => {
     setLoading(true);
     apiClient.getLgtms(evaluatedId).then(resp => {
       setEvaluatedId(resp.evaluated_id);
@@ -36,16 +36,11 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    apiClient.getLgtms().then(resp => {
-      setEvaluatedId(resp.evaluated_id);
-      setLgtms(resp.lgtms);
-      setLoading(false);
-    });
+    load();
   }, []);
 
   return (
-    <LgtmsContext.Provider value={{ lgtms, loading, loadable: !!evaluatedId, loadMore }}>
+    <LgtmsContext.Provider value={{ lgtms, loading, loadable: !!evaluatedId, loadMore: load }}>
       {props.children}
     </LgtmsContext.Provider>
   );
