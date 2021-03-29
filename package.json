@@ -35,6 +35,7 @@
     "@typescript-eslint/parser": "^4.5.0",
     "eslint": "^7.23.0",
     "eslint-plugin-react": "^7.21.4",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "typescript": "~3.7.2"
   }
 }
