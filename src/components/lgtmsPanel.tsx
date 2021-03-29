@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useLgtms } from '../contexts';
-import { LgtmList, LgtmListItem, UploadButton, GenerateConfirm, ModalLoading } from '.';
+import { LgtmList, LgtmListItem, UploadButton, GenerateConfirm, ModalLoading, Loading } from '.';
 import { ImageFile, ImageFileLoader, DataUrl } from '../infrastructures';
 import { FileTooLargeError } from '../domain';
 
 export const LgtmsPanel: React.FC = () => {
-  const { lgtms } = useLgtms();
+  const { lgtms, loading } = useLgtms();
   const { enqueueSnackbar } = useSnackbar();
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [loadingImageFile, setLoadingImageFile] = useState<boolean>(false);
@@ -40,6 +40,8 @@ export const LgtmsPanel: React.FC = () => {
           <LgtmListItem key={lgtm.id} lgtm={lgtm}/>
         ))}
       </LgtmList>
+      {loading && <Loading/>}
+
       <ModalLoading open={loadingImageFile} text='画像を読込中'/>
       <UploadButton onChange={handleChangeFile}/>
       <GenerateConfirm

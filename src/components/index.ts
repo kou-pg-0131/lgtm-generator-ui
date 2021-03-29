@@ -11,3 +11,4 @@ export * from './modalCard';
 export * from './generateConfirm';
 export * from './externalLink';
 export * from './modalLoading';
+export * from './loading';
