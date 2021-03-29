@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box } from '@material-ui/core';
 import { Layout } from '../layout';
-import { useLgtms } from '../contexts';
-import { LgtmsPanel, SerachImagesPanel, FavoritesPanel, Tabs, TabValue, LgtmList, LgtmListItem } from '../components';
+import { LgtmsPanel, SerachImagesPanel, FavoritesPanel, Tabs, TabValue } from '../components';
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -12,8 +11,6 @@ const Home: React.FC = () => {
     return (['lgtms', 'search_images', 'favorites'] as TabValue[]).find((e) => e === router.query.tab) || 'lgtms';
   };
   const [currentTab, setCurrentTab] = useState<TabValue>('lgtms');
-
-  const { lgtms } = useLgtms();
 
   const handleTabChange = (value: TabValue) => {
     setCurrentTab(value);

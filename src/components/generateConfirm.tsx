@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, CardActions, CardContent, Link, Typography } from '@material-ui/core';
+import { Button, CardActions, CardContent, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { ModalCard, ExternalLink } from '.';
 
@@ -31,10 +31,6 @@ type Props = {
 
 export const GenerateConfirm: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
-
-  const handleClickCancel = () => {
-    props.onClose();
-  };
 
   return (
     <ModalCard open={props.open} onClose={props.onClose}>
