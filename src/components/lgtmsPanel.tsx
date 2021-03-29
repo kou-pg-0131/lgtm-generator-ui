@@ -21,13 +21,23 @@ export const LgtmsPanel: React.FC = () => {
 
   const { lgtms, loading, loadable, loadMore, create, reload } = useLgtms();
   const { enqueueSnackbar } = useSnackbar();
+  const [generating, setGenerating] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<ImageFile>();
   const [loadingImageFile, setLoadingImageFile] = useState<boolean>(false);
 
-  const clearImageFile = () => setImageFile(undefined);
+  const handleCloseConfirm = () => {
+    if (generating) return;
+    setImageFile(undefined);
+  };
 
   const handleGenerate = () => {
+    setGenerating(true);
     create({ base64: imageFile?.base64 }).then(() => {
+      enqueueSnackbar('LGTM 画像を生成しました');
+    }).catch(() => {
+      enqueueSnackbar('LGTM 画像の生成に失敗しました');
+    }).finally(() => {
+      setGenerating(false);
       setImageFile(undefined);
       reload();
     });
@@ -72,9 +82,10 @@ export const LgtmsPanel: React.FC = () => {
       <ModalLoading open={loadingImageFile} text='画像を読込中'/>
       <UploadButton onChange={handleChangeFile}/>
       <GenerateConfirm
+        disabled={generating}
         open={!!imageFile}
         onGenerate={handleGenerate}
-        onClose={clearImageFile}
+        onClose={handleCloseConfirm}
         imgSrc={imageFile && DataUrl.fromBase64({ imageType: imageFile.type, base64: imageFile.base64 }).toString('dataurl')}
       />
     </Box>

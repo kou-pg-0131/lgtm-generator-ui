@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, CardActions, CardContent, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { ModalCard, ExternalLink } from '.';
+import { ModalCard, ExternalLink, LoadableButton } from '.';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -28,6 +28,7 @@ type Props = {
   onGenerate: () => void;
   onClose: () => void;
   imgSrc?: string;
+  disabled: boolean;
 };
 
 export const GenerateConfirm: React.FC<Props> = (props: Props) => {
@@ -42,20 +43,22 @@ export const GenerateConfirm: React.FC<Props> = (props: Props) => {
       </CardContent>
       <CardActions>
         <Button
+          disabled={props.disabled}
           fullWidth
           variant='contained'
           onClick={props.onClose}
         >
           キャンセル
         </Button>
-        <Button
+        <LoadableButton
           fullWidth
+          loading={props.disabled}
           color='primary'
           variant='contained'
           onClick={props.onGenerate}
         >
           生成
-        </Button>
+        </LoadableButton>
       </CardActions>
     </ModalCard>
   );
