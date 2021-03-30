@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { AppProps } from 'next/app';
 import { IconButton, CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -31,10 +32,16 @@ export const theme = createMuiTheme({
 const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   const classes = useStyles();
   const notistackRef = React.createRef<SnackbarProvider>();
+  const router = useRouter();
 
   const handleClickDissmiss = (key: React.ReactText) => {
     notistackRef.current?.closeSnackbar(key);
   };
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_STAGE !== 'production') return;
+    window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, { page_path: router.pathname });
+  }, [router.pathname]);
 
   return (
     <ThemeProvider theme={theme}>
