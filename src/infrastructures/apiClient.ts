@@ -1,4 +1,4 @@
-import { Report, ReportType, Image, Lgtm } from '../domain';
+import { Report, ReportProps, ReportType, Image, Lgtm } from '../domain';
 import { HttpClient, IHttpClient, UrlBuilder, IUrlBuilder, QueryStringParameters } from '.';
 
 export interface IApiClient {
@@ -24,9 +24,9 @@ export class ApiClient implements IApiClient {
     return await this.httpClient.post<Lgtm>(endpoint, body, { 'Content-Type': 'application/json' });
   }
 
-  public async createReport(params: { type: ReportType; text: string; lgtm: Lgtm; }): Promise<Report> {
+  public async createReport(props: ReportProps): Promise<Report> {
     const endpoint = this.buildEndpoint('/v1/reports');
-    const body = JSON.stringify({ type: params.type, text: params.text, lgtm_id: params.lgtm.id });
+    const body = JSON.stringify(props);
     return await this.httpClient.post(endpoint, body, { 'Content-Type': 'application/json' });
   }
 

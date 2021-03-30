@@ -13,3 +13,4 @@ export * from './externalLink';
 export * from './modalLoading';
 export * from './loading';
 export * from './loadableButton';
+export * from './reportForm';

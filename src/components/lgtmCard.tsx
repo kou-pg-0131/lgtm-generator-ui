@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Divider, Paper, Card, CardActions, CardContent, Button, ButtonGroup, List, ListItem, ListItemText } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@material-ui/icons';
 import { orange, pink, red } from '@material-ui/core/colors';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import { useSnackbar } from 'notistack';
-import { useFavorites } from '../contexts';
-import { Lgtm } from '../domain';
-import { ButtonWithPopper } from '.';
+import { useFavorites, useApi } from '../contexts';
+import { Lgtm, ReportType, ReportProps } from '../domain';
+import { ButtonWithPopper, ReportForm } from '.';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -82,8 +82,13 @@ type Props = {
 export const LgtmCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
+  const [openReportForm, setOpenReportForm] = useState<boolean>(false);
+  const [sendingReport, setSendingReport] = useState<boolean>(false);
+  const [reportText, setReportText] = useState<string>('');
+  const [reportType, setReportType] = useState<ReportType>();
   const { favorites, add, remove } = useFavorites();
   const { enqueueSnackbar } = useSnackbar();
+  const { apiClient } = useApi();
 
   const handleClickFavorite = () => {
     add(props.lgtm);
@@ -97,61 +102,105 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
     enqueueSnackbar('クリップボードにコピーしました');
   };
 
+  const handleCloseReportForm = () => {
+    setOpenReportForm(false);
+  };
+
+  const handleClickReport = () => {
+    setOpenReportForm(true);
+  };
+
+  const handleChangeReportText = (text: string) => {
+    setReportText(text);
+  };
+
+  const handleChangeReportType = (type: ReportType) => {
+    setReportType(type);
+  };
+
+  const handleSendReport = (props: ReportProps) => {
+    setSendingReport(true);
+    apiClient.createReport(props).then(() => {
+      enqueueSnackbar('送信しました');
+      setOpenReportForm(false);
+      setReportText('');
+      setReportType(undefined);
+    }).catch(() => {
+      enqueueSnackbar('送信失敗しました', { variant: 'error' });
+    }).finally(() => {
+      setSendingReport(false);
+    });
+  };
+
   return (
-    <Card>
-      <CardContent className={classes.content}>
-        <img
-          className={classes.img}
-          src={`${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id}`}
-          alt="LGTM"
-        />
-      </CardContent>
-      <CardActions className={classes.actions} disableSpacing>
-        <ButtonGroup className={classes.buttonGroup} variant='contained' color='primary'>
-          <ButtonWithPopper
-            className={classes.copyButton}
-            popperContent={(
-              <Paper>
-                <List className={classes.list}>
-                  <ListItem className={classes.listItem} button onClick={handleClickCopy}>
-                    <CopyToClipBoard text={`[![LGTM](${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)`}>
-                      <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
-                    </CopyToClipBoard>
-                  </ListItem>
-                  <Divider/>
-                  <ListItem className={classes.listItem} button onClick={handleClickCopy}>
-                    <CopyToClipBoard text={`<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>`}>
-                      <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
-                    </CopyToClipBoard>
-                  </ListItem>
-                </List>
-              </Paper>
+    <>
+      <ReportForm
+        lgtm={props.lgtm}
+        open={openReportForm}
+        onClose={handleCloseReportForm}
+        onSend={handleSendReport}
+        disabled={sendingReport}
+        text={reportText}
+        onChangeText={handleChangeReportText}
+        type={reportType}
+        onChangeType={handleChangeReportType}
+      />
+      <Card>
+        <CardContent className={classes.content}>
+          <img
+            className={classes.img}
+            src={`${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id}`}
+            alt="LGTM"
+          />
+        </CardContent>
+        <CardActions className={classes.actions} disableSpacing>
+          <ButtonGroup className={classes.buttonGroup} variant='contained' color='primary'>
+            <ButtonWithPopper
+              className={classes.copyButton}
+              popperContent={(
+                <Paper>
+                  <List className={classes.list}>
+                    <ListItem className={classes.listItem} button onClick={handleClickCopy}>
+                      <CopyToClipBoard text={`[![LGTM](${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id})](https://lgtm-generator.kou-pg.com)`}>
+                        <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>Markdown</ListItemText>
+                      </CopyToClipBoard>
+                    </ListItem>
+                    <Divider/>
+                    <ListItem className={classes.listItem} button onClick={handleClickCopy}>
+                      <CopyToClipBoard text={`<a href="https://lgtm-generator.kou-pg.com"><img src="${process.env.NEXT_PUBLIC_LGTMS_ORIGIN}/${props.lgtm.id}" alt="LGTM"/></a>`}>
+                        <ListItemText primaryTypographyProps={{ className: classes.listItemText }}>HTML</ListItemText>
+                      </CopyToClipBoard>
+                    </ListItem>
+                  </List>
+                </Paper>
+              )}
+            >
+              <FileCopyOutlined fontSize='small'/>
+            </ButtonWithPopper>
+            {favorites.some(favorite => favorite.id === props.lgtm.id) ? (
+              <Button
+                className={classes.unfavoriteButton}
+                onClick={handleClickUnfavorite}
+              >
+                <Favorite className={classes.unfavoriteIcon} fontSize='small'/>
+              </Button>
+            ) : (
+              <Button
+                className={classes.favoriteButton}
+                onClick={handleClickFavorite}
+              >
+                <FavoriteBorder className={classes.favoriteIcon} fontSize='small'/>
+              </Button>
             )}
-          >
-            <FileCopyOutlined fontSize='small'/>
-          </ButtonWithPopper>
-          {favorites.some(favorite => favorite.id === props.lgtm.id) ? (
             <Button
-              className={classes.unfavoriteButton}
-              onClick={handleClickUnfavorite}
+              className={classes.reportButton}
+              onClick={handleClickReport}
             >
-              <Favorite className={classes.unfavoriteIcon} fontSize='small'/>
+              <FlagOutlined fontSize='small'/>
             </Button>
-          ) : (
-            <Button
-              className={classes.favoriteButton}
-              onClick={handleClickFavorite}
-            >
-              <FavoriteBorder className={classes.favoriteIcon} fontSize='small'/>
-            </Button>
-          )}
-          <Button
-            className={classes.reportButton}
-          >
-            <FlagOutlined fontSize='small'/>
-          </Button>
-        </ButtonGroup>
-      </CardActions>
-    </Card>
+          </ButtonGroup>
+        </CardActions>
+      </Card>
+    </>
   );
 };

@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import { IconButton, CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
-import { LgtmsProvider, FavoritesProvider } from '../contexts';
+import { ApiProvider, LgtmsProvider, FavoritesProvider } from '../contexts';
 import { SnackbarProvider } from 'notistack';
 import '../styles/global.scss';
 
@@ -48,11 +48,13 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
         variant='success'
         autoHideDuration={3000}
       >
-        <LgtmsProvider>
-          <FavoritesProvider>
-            <Component {...pageProps}/>
-          </FavoritesProvider>
-        </LgtmsProvider>
+        <ApiProvider>
+          <LgtmsProvider>
+            <FavoritesProvider>
+              <Component {...pageProps}/>
+            </FavoritesProvider>
+          </LgtmsProvider>
+        </ApiProvider>
       </SnackbarProvider>
     </ThemeProvider>
   );

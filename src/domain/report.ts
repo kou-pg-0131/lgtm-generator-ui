@@ -13,3 +13,9 @@ export type Report = {
   type: ReportType;
   text: string;
 };
+
+export type ReportProps = {
+  lgtm_id: string;
+  type: ReportType;
+  text: string;
+};
