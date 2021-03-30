@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
-import { useLgtms } from '../contexts';
+import { useLgtms, useApi } from '../contexts';
 import { LgtmList, LgtmListItem, UploadButton, GenerateConfirm, ModalLoading, Loading } from '.';
 import { ImageFile, ImageFileLoader, DataUrl } from '../infrastructures';
 import { FileTooLargeError } from '../domain';
@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export const LgtmsPanel: React.FC = () => {
   const classes = useStyles();
 
-  const { lgtms, loading, loadable, loadMore, create, reload } = useLgtms();
+  const { lgtms, loading, loadable, loadMore, reload } = useLgtms();
+  const { apiClient } = useApi();
   const { enqueueSnackbar } = useSnackbar();
   const [generating, setGenerating] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<ImageFile>();
@@ -32,7 +33,7 @@ export const LgtmsPanel: React.FC = () => {
 
   const handleGenerate = () => {
     setGenerating(true);
-    create({ base64: imageFile?.base64 }).then(() => {
+    apiClient.createLgtm({ base64: imageFile?.base64 }).then(() => {
       enqueueSnackbar('LGTM 画像を生成しました');
     }).catch(() => {
       enqueueSnackbar('LGTM 画像の生成に失敗しました');

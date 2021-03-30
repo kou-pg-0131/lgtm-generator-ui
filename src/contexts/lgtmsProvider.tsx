@@ -6,7 +6,6 @@ type Context = {
   lgtms: Lgtm[];
   loading: boolean;
   reload?: () => void;
-  create?: (params: { base64?: string, url?: string }) => Promise<void>;
   loadMore?: () => void;
   loadable: boolean;
 };
@@ -27,10 +26,6 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
   const [evaluatedId, setEvaluatedId] = useState<string>();
 
   const apiClient = new ApiClient();
-
-  const create = async (params: { base64?: string, url?: string }) => {
-    await apiClient.createLgtm(params);
-  };
 
   const clear = () => {
     setEvaluatedId(undefined);
@@ -66,7 +61,6 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
         loadable: !!evaluatedId,
         loadMore,
         reload,
-        create,
       }}
     >
       {props.children}
