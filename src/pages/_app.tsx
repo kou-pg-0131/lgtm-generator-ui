@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import { IconButton, CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
-import { ApiProvider, LgtmsProvider, FavoritesProvider } from '../contexts';
+import { ImagesProvider, ApiProvider, LgtmsProvider, FavoritesProvider } from '../contexts';
 import { SnackbarProvider } from 'notistack';
 import '../styles/global.scss';
 
@@ -50,9 +50,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
       >
         <ApiProvider>
           <LgtmsProvider>
-            <FavoritesProvider>
-              <Component {...pageProps}/>
-            </FavoritesProvider>
+            <ImagesProvider>
+              <FavoritesProvider>
+                <Component {...pageProps}/>
+              </FavoritesProvider>
+            </ImagesProvider>
           </LgtmsProvider>
         </ApiProvider>
       </SnackbarProvider>

@@ -30,8 +30,8 @@ export class ApiClient implements IApiClient {
     return await this.httpClient.post(endpoint, body, { 'Content-Type': 'application/json' });
   }
 
-  public async searchImages(params: { q: string; }): Promise<Image[]> {
-    const endpoint = this.buildEndpoint('/v1/images', { q: params.q });
+  public async searchImages(q: string): Promise<Image[]> {
+    const endpoint = this.buildEndpoint('/v1/images', { q });
     return await this.httpClient.get(endpoint);
   }
 
