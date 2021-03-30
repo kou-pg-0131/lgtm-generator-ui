@@ -85,34 +85,6 @@ jobs:
           command: apply -auto-approve
       - slack/status
 
-  deploy:
-    executor: awscli
-    parameters:
-      stage:
-        type: string
-    steps:
-      - checkout
-      - setup_aws_config
-      - run: yum -y update
-      - run: yum -y install wget tar gzip
-      - run:
-          name: install nodejs
-          command: |
-            wget --quiet -O- https://rpm.nodesource.com/setup_12.x | bash -
-            yum -y install nodejs
-      - run:
-          name: install yarn
-          command: |
-            echo 'export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH' >> $BASH_ENV
-            wget --quiet -O- https://yarnpkg.com/install.sh | bash -s -- --version 1.22.5
-      - yarn_install
-      - run: yarn run build:<< parameters.stage >>
-      - run:
-          name: upload files to s3
-          command: aws s3 sync ./build s3://lgtm-generator-ui-<< parameters.stage >>-deployment/ --delete
-      - slack/status
-
-
 workflows:
   build:
     jobs:
@@ -131,25 +103,11 @@ workflows:
           filters:
             branches:
               ignore: main
-      - deploy:
-          name: deploy_dev
-          stage: dev
-          requires: [terraform_apply_dev]
-          filters:
-            branches:
-              ignore: main
 
       - terraform_apply:
           name: terraform_apply_prod
           stage: prod
           requires: [approval_deploy]
-          filters:
-            branches:
-              only: main
-      - deploy:
-          name: deploy_prod
-          stage: prod
-          requires: [terraform_apply_prod]
           filters:
             branches:
               only: main
