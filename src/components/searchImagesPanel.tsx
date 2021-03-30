@@ -67,6 +67,7 @@ export const SerachImagesPanel: React.FC = () => {
       <Form onSubmit={handleSearch}>
         <TextField
           className={classes.input}
+          disabled={searching}
           fullWidth
           variant='outlined'
           value={query}
