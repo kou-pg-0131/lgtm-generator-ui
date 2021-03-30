@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box } from '@material-ui/core';
 import { Layout } from '../layout';
-import { LgtmsPanel, SerachImagesPanel, FavoritesPanel, Tabs, TabValue } from '../components';
+import { Title, LgtmsPanel, SerachImagesPanel, FavoritesPanel, Tabs, TabValue } from '../components';
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -23,6 +23,7 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
+      <Title/>
       <Tabs value={currentTab} onChange={handleTabChange}/>
       <Box hidden={currentTab !== 'lgtms'}>
         <LgtmsPanel/>

@@ -17,3 +17,4 @@ export * from './reportForm';
 export * from './form';
 export * from './imageList';
 export * from './imageListItem';
+export * from './title';
