@@ -43,6 +43,7 @@ export const SerachImagesPanel: React.FC = () => {
   };
 
   const handleCloseConfirm = () => {
+    if (generating) return;
     setSelectedImage(undefined);
   };
 
