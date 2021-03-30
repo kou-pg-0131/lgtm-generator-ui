@@ -4,9 +4,9 @@ orbs:
   slack: circleci/slack@3.4.2
 
 executors:
-  awscli:
+  node:
     docker:
-      - image: amazon/aws-cli:2.0.61
+      - image: node:12.19.0
   terraform:
     docker:
       - image: hashicorp/terraform:0.13.5
@@ -14,15 +14,13 @@ executors:
 commands:
   terraform:
     parameters:
-      stage:
-        type: string
       command:
         type: string
     steps:
       - run:
-          name: terraform << parameters.command >> - << parameters.stage >>
+          name: terraform << parameters.command >>
           command: |
-            cd ~/project/terraform/envs/<< parameters.stage >>
+            cd ~/project/terraform/
             terraform << parameters.command >>
 
   yarn_install:
@@ -48,6 +46,15 @@ commands:
             echo "region = us-east-1"                             >> ~/.aws/config
 
 jobs:
+  test:
+    executor: node
+    steps:
+      - checkout
+      - yarn_install
+      - run: yarn run lint
+      - run: yarn run build
+      - slack/status
+
   terraform_plan:
     executor: terraform
     steps:
@@ -55,59 +62,30 @@ jobs:
       - run: apk --update add curl bash
       - setup_aws_config
       - terraform:
-          stage: dev
           command: init
       - terraform:
-          stage: dev
-          command: plan
-      - terraform:
-          stage: prod
-          command: init
-      - terraform:
-          stage: prod
           command: plan
       - slack/status
 
   terraform_apply:
     executor: terraform
-    parameters:
-      stage:
-        type: string
     steps:
       - checkout
       - run: apk --update add curl bash
       - setup_aws_config
       - terraform:
-          stage: << parameters.stage >>
           command: init
       - terraform:
-          stage: << parameters.stage >>
           command: apply -auto-approve
       - slack/status
 
 workflows:
   build:
     jobs:
+      - test
       - terraform_plan
-
-      - slack/approval-notification:
-          requires: [terraform_plan]
-      - approval_deploy:
-          type: approval
-          requires: [terraform_plan]
-
       - terraform_apply:
-          name: terraform_apply_dev
-          stage: dev
-          requires: [approval_deploy]
-          filters:
-            branches:
-              ignore: main
-
-      - terraform_apply:
-          name: terraform_apply_prod
-          stage: prod
-          requires: [approval_deploy]
+          requires: [terraform_plan]
           filters:
             branches:
               only: main
