@@ -1,5 +1,4 @@
 export * from './apiClient';
-export * from './apiClientFactory';
 export * from './dataStore';
 export * from './dataUrl';
 export * from './httpClient';

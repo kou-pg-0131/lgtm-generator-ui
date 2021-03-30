@@ -1,11 +1,11 @@
-resource aws_s3_bucket deployment {
+resource "aws_s3_bucket" "deployment" {
   bucket        = "${local.prefix}-deployment"
   acl           = "private"
   force_destroy = true
   tags          = { Name = "${local.prefix}-deployment" }
 }
 
-resource aws_s3_bucket_policy deployment {
+resource "aws_s3_bucket_policy" "deployment" {
   bucket = aws_s3_bucket.deployment.id
   policy = jsonencode({
     Version = "2012-10-17"

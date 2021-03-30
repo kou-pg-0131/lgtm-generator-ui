@@ -1,4 +1,4 @@
-variable stage { type = string }
+variable "stage" { type = string }
 
 locals {
   sub_domain = var.stage == "prod" ? "" : "${var.stage}."

@@ -1,6 +1,6 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly REACT_APP_API_ORIGIN: string;
-    readonly REACT_APP_LGTMS_ORIGIN: string;
+    readonly NEXT_PUBLIC_API_ORIGIN: string;
+    readonly NEXT_PUBLIC_LGTMS_ORIGIN: string;
   }
 }
