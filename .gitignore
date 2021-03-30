@@ -32,6 +32,6 @@ yarn-error.log*
 terraform.log
 terraform.tfvars
 
-# circle-env
-.circle-env/circle-token
-.circle-env/.env
+# circleci-env
+.circleci-env/circle-token
+.circleci-env/.env

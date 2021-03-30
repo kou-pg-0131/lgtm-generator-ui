@@ -48,6 +48,7 @@ export const SerachImagesPanel: React.FC = () => {
   };
 
   const handleSearch = () => {
+    if (query.trim() === '') return;
     setSearching(true);
     apiClient.searchImages(query).then(images => {
       setImages(images);
