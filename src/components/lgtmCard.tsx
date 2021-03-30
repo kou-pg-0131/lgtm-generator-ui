@@ -106,6 +106,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   };
 
   const handleCloseReportForm = () => {
+    if (sendingReport) return;
     setOpenReportForm(false);
   };
 
