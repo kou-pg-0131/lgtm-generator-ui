@@ -2,10 +2,17 @@ import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
-import { useLgtms, useApi } from '../contexts';
-import { LgtmList, LgtmListItem, UploadButton, GenerateConfirm, ModalLoading, Loading } from '.';
-import { ImageFile, ImageFileLoader, DataUrl } from '../infrastructures';
-import { FileTooLargeError } from '../domain';
+import { useLgtms } from '../contexts/lgtmsProvider';
+import { useApi } from '../contexts/apiProvider';
+import { LgtmList } from './lgtmList';
+import { LgtmListItem } from './lgtmListItem';
+import { UploadButton } from './uploadButton';
+import { GenerateConfirm } from './generateConfirm';
+import { ModalLoading } from './modalLoading';
+import { Loading } from './loading';
+import { ImageFile, ImageFileLoader } from '../infrastructures/imageFileLoader';
+import { DataUrl } from '../infrastructures/dataUrl';
+import { FileTooLargeError } from '../domain/errors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

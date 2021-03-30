@@ -3,7 +3,10 @@ import { AppProps } from 'next/app';
 import { IconButton, CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Close } from '@material-ui/icons';
-import { ImagesProvider, ApiProvider, LgtmsProvider, FavoritesProvider } from '../contexts';
+import { ImagesProvider } from '../contexts/imagesProvider';
+import { ApiProvider } from '../contexts/apiProvider';
+import { LgtmsProvider } from '../contexts/lgtmsProvider';
+import { FavoritesProvider } from '../contexts/favoritesProvider';
 import { SnackbarProvider } from 'notistack';
 import '../styles/global.scss';
 

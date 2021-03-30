@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Lgtm } from '../domain';
-import { ApiClient } from '../infrastructures';
+import { Lgtm } from '../domain/lgtm';
+import { useApi } from './apiProvider';
 
 type Context = {
   lgtms: Lgtm[];
@@ -25,7 +25,7 @@ export const LgtmsProvider: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [evaluatedId, setEvaluatedId] = useState<string>();
 
-  const apiClient = new ApiClient();
+  const { apiClient } = useApi();
 
   const clear = () => {
     setEvaluatedId(undefined);

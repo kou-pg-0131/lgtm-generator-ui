@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Card, CardActionArea, CardMedia } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Image } from '../domain';
+import { Image } from '../domain/image';
 
 const useStyles = makeStyles(() =>
   createStyles({

@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useState } from 'react';
-import { Image } from '../domain';
+import { Image } from '../domain/image';
 
 type Context = {
   images: Image[];

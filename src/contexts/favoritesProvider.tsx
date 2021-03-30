@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Lgtm } from '../domain';
-import { DataStore } from '../infrastructures';
+import { Lgtm } from '../domain/lgtm';
+import { DataStore } from '../infrastructures/dataStore';
 
 type Context = {
   favorites: Lgtm[];

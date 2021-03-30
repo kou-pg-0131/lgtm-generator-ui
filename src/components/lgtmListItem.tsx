@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { Lgtm } from '../domain';
-import { LgtmCard } from '.';
+import { Lgtm } from '../domain/lgtm';
+import { LgtmCard } from './lgtmCard';
 
 type Props = {
   lgtm: Lgtm;

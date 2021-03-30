@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Button, CardActions, CardContent, RadioGroup, TextField, Radio, Typography, FormControlLabel } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Lgtm, ReportProps, ReportType } from '../domain';
-import { ModalCard, LoadableButton } from '.';
+import { Lgtm } from '../domain/lgtm';
+import { ReportProps, ReportType } from '../domain/report';
+import { ModalCard } from './modalCard';
+import { LoadableButton } from './loadableButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
