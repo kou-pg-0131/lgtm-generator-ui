@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Box, TextField, InputAdornment } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
-import { Form, ImageList, ImageListItem, Loading } from '.';
-import { useApi, useImages } from '../contexts';
+import { useSnackbar } from 'notistack';
+import { Form, ImageList, ImageListItem, Loading, GenerateConfirm } from '.';
+import { useApi, useImages, useLgtms } from '../contexts';
 import { Image } from '../domain';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -20,15 +21,23 @@ export const SerachImagesPanel: React.FC = () => {
 
   const [query, setQuery] = useState<string>('');
   const [searching, setSearching] = useState<boolean>(false);
+  const [generating, setGenerating] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<Image>();
+  const { reload } = useLgtms();
   const { images, setImages } = useImages();
   const { apiClient } = useApi();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.currentTarget.value);
   };
 
   const handleClickImage = (image: Image) => {
-    console.log(image);
+    setSelectedImage(image);
+  };
+
+  const handleCloseConfirm = () => {
+    setSelectedImage(undefined);
   };
 
   const handleSearch = () => {
@@ -37,6 +46,19 @@ export const SerachImagesPanel: React.FC = () => {
       setImages(images);
     }).finally(() => {
       setSearching(false);
+    });
+  };
+
+  const handleGenerate = () => {
+    setGenerating(true);
+    apiClient.createLgtm({ url: selectedImage?.url }).then(() => {
+      enqueueSnackbar('LGTM 画像を生成しました');
+    }).catch(() => {
+      enqueueSnackbar('LGTM 画像の生成に失敗しました');
+    }).finally(() => {
+      setGenerating(false);
+      setSelectedImage(undefined);
+      reload();
     });
   };
 
@@ -64,6 +86,14 @@ export const SerachImagesPanel: React.FC = () => {
           ))}
         </ImageList>
       )}
+
+      <GenerateConfirm
+        disabled={generating}
+        open={!!selectedImage}
+        onGenerate={handleGenerate}
+        onClose={handleCloseConfirm}
+        imgSrc={selectedImage?.url}
+      />
     </Box>
   );
 };
