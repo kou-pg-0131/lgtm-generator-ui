@@ -1,4 +1,4 @@
-import { Lgtm } from '../domain';
+import { Lgtm } from '../domain/lgtm';
 
 export class DataStore {
   private keys = {

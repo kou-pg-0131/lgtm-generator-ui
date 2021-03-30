@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from 'react';
-import { ApiClient } from '../infrastructures';
+import { ApiClient } from '../infrastructures/apiClient';
 
 type Context = {
   apiClient?: ApiClient;

@@ -5,9 +5,12 @@ import { Favorite, FavoriteBorder, FileCopyOutlined, FlagOutlined } from '@mater
 import { orange, pink, red } from '@material-ui/core/colors';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import { useSnackbar } from 'notistack';
-import { useFavorites, useApi } from '../contexts';
-import { Lgtm, ReportType, ReportProps } from '../domain';
-import { ButtonWithPopper, ReportForm } from '.';
+import { useApi } from '../contexts/apiProvider';
+import { useFavorites } from '../contexts/favoritesProvider';
+import { Lgtm } from '../domain/lgtm';
+import { ReportType, ReportProps } from '../domain/report';
+import { ButtonWithPopper } from './buttonWithPopper';
+import { ReportForm } from './reportForm';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -103,6 +106,7 @@ export const LgtmCard: React.FC<Props> = (props: Props) => {
   };
 
   const handleCloseReportForm = () => {
+    if (sendingReport) return;
     setOpenReportForm(false);
   };
 

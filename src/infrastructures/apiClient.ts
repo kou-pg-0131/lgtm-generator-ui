@@ -1,5 +1,8 @@
-import { Report, ReportProps, ReportType, Image, Lgtm } from '../domain';
-import { HttpClient, IHttpClient, UrlBuilder, IUrlBuilder, QueryStringParameters } from '.';
+import { Report, ReportProps } from '../domain/report';
+import { Image } from '../domain/image';
+import { Lgtm } from '../domain/lgtm';
+import { HttpClient, IHttpClient } from './httpClient';
+import { UrlBuilder, IUrlBuilder, QueryStringParameters } from '././urlBuilder';
 
 export interface IApiClient {
   // GET /v1/lgtms

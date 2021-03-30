@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box } from '@material-ui/core';
 import { Layout } from '../layout';
-import { Title, LgtmsPanel, SerachImagesPanel, FavoritesPanel, Tabs, TabValue } from '../components';
+import { Title } from '../components/title';
+import { LgtmsPanel } from '../components/lgtmsPanel';
+import { SerachImagesPanel } from '../components/searchImagesPanel';
+import { FavoritesPanel } from '../components/favoritesPanel';
+import { Tabs, TabValue } from '../components/tabs';
 
 const Home: React.FC = () => {
   const router = useRouter();

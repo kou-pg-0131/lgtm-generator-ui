@@ -1,6 +1,6 @@
 import { loadImage, createCanvas } from 'canvas';
-import { FileTooLargeError } from '../domain';
-import { DataUrl } from '.';
+import { FileTooLargeError } from '../domain/errors';
+import { DataUrl } from './dataUrl';
 
 export type ImageFile = {
   name: string;

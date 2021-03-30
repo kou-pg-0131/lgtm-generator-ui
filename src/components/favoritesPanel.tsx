@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { useFavorites } from '../contexts';
-import { LgtmList, LgtmListItem } from '.';
+import { useFavorites } from '../contexts/favoritesProvider';
+import { LgtmList } from './lgtmList';
+import { LgtmListItem } from './lgtmListItem';
 
 export const FavoritesPanel: React.FC = () => {
   const { favorites } = useFavorites();

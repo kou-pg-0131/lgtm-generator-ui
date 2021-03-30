@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button, CardActions, CardContent, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { ModalCard, ExternalLink, LoadableButton } from '.';
+import { ModalCard } from './modalCard';
+import { ExternalLink } from './externalLink';
+import { LoadableButton } from './loadableButton';
 
 const useStyles = makeStyles(() =>
   createStyles({

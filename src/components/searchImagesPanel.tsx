@@ -3,9 +3,15 @@ import { Box, TextField, InputAdornment } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import { Form, ImageList, ImageListItem, Loading, GenerateConfirm } from '.';
-import { useApi, useImages, useLgtms } from '../contexts';
-import { Image } from '../domain';
+import { Form } from './form';
+import { ImageList } from './imageList';
+import { ImageListItem } from './imageListItem';
+import { Loading } from './loading';
+import { GenerateConfirm } from './generateConfirm';
+import { useApi } from '../contexts/apiProvider';
+import { useImages } from '../contexts/imagesProvider';
+import { useLgtms } from '../contexts/lgtmsProvider';
+import { Image } from '../domain/image';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +43,7 @@ export const SerachImagesPanel: React.FC = () => {
   };
 
   const handleCloseConfirm = () => {
+    if (generating) return;
     setSelectedImage(undefined);
   };
 
